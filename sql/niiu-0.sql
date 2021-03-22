@@ -10,7 +10,7 @@ drop table if exists historical_messages;
 drop table if exists attachments;
 
 -- user_status
-create or replace table user_status(id varchar(20) primary key);
+create table user_status(id varchar(20) primary key);
 
 insert into user_status values
 ('ACTIVE'),
@@ -19,23 +19,23 @@ insert into user_status values
 
 -- users
 
-create or replace table users(id bigint primary key auto_increment,
-                              username varchar(30) unique,
-                              password varchar(60),
-                              email varchar(100) unique,
-                              status varchar(20) default 'ACTIVE',
-                              create_date datetime default now(),
-                              update_date datetime,
-                              foreign key (status) references user_status(id)
-                                  on update cascade
-                                  on delete restrict
+create table users(id bigint primary key auto_increment,
+                   username varchar(30) unique,
+                   password varchar(60),
+                   email varchar(100) unique,
+                   status varchar(20) default 'ACTIVE',
+                   create_date datetime default now(),
+                   update_date datetime,
+                   foreign key (status) references user_status(id)
+                       on update cascade
+                       on delete restrict
 );
 
-create or replace index users_email_status on users(email, status);
+create index users_email_status on users(email, status);
 
 -- roles
 
-create or replace table roles(
+create table roles(
     id varchar(20) primary key
 );
 
@@ -46,9 +46,9 @@ insert into roles values
 
 -- user roles
 
-create or replace table users_roles(user_id bigint,
-                                    role_id varchar(20),
-                                    primary key (user_id, role_id)
+create table users_roles(user_id bigint,
+                         role_id varchar(20),
+                         primary key (user_id, role_id)
 );
 
 alter table users_roles
@@ -57,35 +57,35 @@ alter table users_roles
         on delete cascade,
     add foreign key (role_id) references roles(id)
         on update cascade
-        on delete cascade
+           on delete cascade
 ;
 
 -- chats
 
-create or replace table chats(group_id varchar(36),
-                              user_id bigint,
-                              create_date datetime,
-                              update_date datetime,
-                              primary key (group_id, user_id),
-                              foreign key (user_id) references users(id)
-                                  on update cascade
-                                  on delete cascade
+create table chats(group_id varchar(36),
+                   user_id bigint,
+                   create_date datetime,
+                   update_date datetime,
+                   primary key (group_id, user_id),
+                   foreign key (user_id) references users(id)
+                       on update cascade
+                       on delete cascade
 );
 
 -- messages
 
-create or replace table messages(id varchar(36) primary key,
-                                 group_id varchar(36),
-                                 user_id bigint,
-                                 has_attachment boolean default false,
-                                 message text default '',
-                                 timestamp bigint,
-                                 create_date datetime
+create table messages(id varchar(36) primary key,
+                      group_id varchar(36),
+                      user_id bigint,
+                      has_attachment boolean default false,
+                      message text,
+                      timestamp bigint,
+                      create_date datetime
 );
 
-create or replace index messages_group_id_timestamp on messages(group_id, timestamp);
+create index messages_group_id_timestamp on messages(group_id, timestamp);
 
-create or replace index messages_group_id_user_id on messages(group_id, user_id);
+create index messages_group_id_user_id on messages(group_id, user_id);
 
 alter table messages
     add foreign key (group_id, user_id) references chats(group_id, user_id)
@@ -95,27 +95,27 @@ alter table messages
 
 -- historical_messages
 
-create or replace table historical_messages(id varchar(36) primary key,
-                                            group_id varchar(36),
-                                            user_id bigint,
-                                            has_attachment boolean default false,
-                                            message text,
-                                            timestamp bigint,
-                                            create_date datetime
+create table historical_messages(id varchar(36) primary key,
+                                 group_id varchar(36),
+                                 user_id bigint,
+                                 has_attachment boolean default false,
+                                 message text,
+                                 timestamp bigint,
+                                 create_date datetime
 );
 
-create or replace index historical_messages_group_id_user_id on historical_messages(group_id, user_id);
+create index historical_messages_group_id_user_id on historical_messages(group_id, user_id);
 
 -- attachments
 
-create or replace table attachments(id varchar(36) primary key,
-                                    message_id varchar(36),
-                                    path varchar(255),
-                                    type varchar(5),
-                                    create_date datetime,
-                                    foreign key (message_id) references messages(id)
-                                        on update cascade
-                                        on delete set null
+create table attachments(id varchar(36) primary key,
+                         message_id varchar(36),
+                         path varchar(255),
+                         type varchar(5),
+                         create_date datetime,
+                         foreign key (message_id) references messages(id)
+                             on update cascade
+                             on delete set null
 );
 
 # create or replace
