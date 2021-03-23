@@ -4,11 +4,28 @@
 <body>
 
 <div id="app">
-  <form action="/login" method="post">
+  <form action="/login" method="post" style="width: 20vw;">
+    <md-field md-clearable>
+      <label for="usernameInput">Username</label>
+      <md-input name="username"
+                id="usernameInput"></md-input>
+    </md-field>
+
+    <md-field>
+      <label for="passwordInput">Password</label>
+      <md-input type="password"
+                name="password"
+                id="passwordInput"></md-input>
+    </md-field>
+
+    <md-button class="md-raised" type="submit">Login</md-button>
+  </form>
+
+  <!--<form action="/login" method="post">
     <label for="usernameInput">Username: </label><input id="usernameInput" type="text" name="username"><br>
     <label for="passwordInput">Password: </label><input id="passwordInput" type="password" name="password"><br>
     <input type="submit" value="Login">
-  </form>
+  </form>-->
 </div>
 
 <script>
