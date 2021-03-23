@@ -4,11 +4,16 @@
 <body>
 
 <div id="app">
+  <input type="text" v-model="myForm.textModel"><br>
+  {{myForm.textModel}}
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const data = {
+      myForm: {
+        textModel: ''
+      }
     }
 
     new Vue({
