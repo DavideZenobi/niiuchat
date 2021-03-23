@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<template th:fragment="header" th:remove="tag">
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+
+    <title>Niu Chat</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+  </head>
+</template>
+
+<template th:fragment="after-imports" th:remove="tag">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+  <script th:if="${#arrays.contains(@environment.getActiveProfiles(), 'production')}"
+          src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+  <script th:unless="${#arrays.contains(@environment.getActiveProfiles(), 'production')}"
+          src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-material"></script>
+
+  <script>
+    Vue.use(VueMaterial.default);
+  </script>
+</template>
+</html>
