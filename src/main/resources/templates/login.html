@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<template th:replace="commons :: header"></template>
+<body>
+
+<div id="app">
+  <form action="/login" method="post">
+    <label for="usernameInput">Username: </label><input id="usernameInput" type="text" name="username"><br>
+    <label for="passwordInput">Password: </label><input id="passwordInput" type="password" name="password"><br>
+    <input type="submit" value="Login">
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const data = {
+    }
+
+    new Vue({
+      el: '#app',
+      data: data,
+      methods: {
+      }
+    });
+  }, false);
+</script>
+
+<template th:replace="commons :: after-imports"></template>
+
+</body>
+</html>

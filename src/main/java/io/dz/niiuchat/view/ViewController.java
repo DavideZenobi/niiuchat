@@ -7,11 +7,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(path = "")
-public class HomeController {
+public class ViewController {
+
+  @GetMapping(path = {"/", "/index", "/index.html"})
+  public String getIndex() {
+    return "index";
+  }
 
   @GetMapping(path = "/home", produces = MediaType.TEXT_HTML_VALUE)
   public String getHome() {
     return "home";
+  }
+
+  @GetMapping(path = "/login", produces = MediaType.TEXT_HTML_VALUE)
+  public String getLogin() {
+    return "login";
   }
 
 }
