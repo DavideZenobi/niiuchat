@@ -4,11 +4,16 @@
 <body>
 
 <div id="app">
-  <form action="/login" method="post" style="width: 20vw;">
+  <form action="/register" method="post" style="width: 20vw;">
     <md-field md-clearable>
       <label for="usernameInput">Username</label>
       <md-input name="username"
                 id="usernameInput"></md-input>
+    </md-field>
+
+    <md-field md-clearable>
+      <label for="emailInput">Email(You will use the email to login)</label>
+      <md-input name="email" id="emailInput"></md-input>
     </md-field>
 
     <md-field>
@@ -18,14 +23,14 @@
                 id="passwordInput"></md-input>
     </md-field>
 
-    <md-button class="md-raised btnLogin" type="submit">Login</md-button>
+    <md-field>
+      <label for="password2Input">Repeat Password</label>
+      <md-input type="password" name="password2" id="password2Input"></md-input>
+    </md-field>
+
+    <md-button class="md-raised btnLogin" type="submit">Register</md-button>
   </form>
 
-  <!--<form action="/login" method="post">
-    <label for="usernameInput">Username: </label><input id="usernameInput" type="text" name="username"><br>
-    <label for="passwordInput">Password: </label><input id="passwordInput" type="password" name="password"><br>
-    <input type="submit" value="Login">
-  </form>-->
 </div>
 
 <script>

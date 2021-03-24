@@ -24,4 +24,7 @@ public class ViewController {
     return "login";
   }
 
+  @GetMapping(path = "/register", produces = MediaType.TEXT_HTML_VALUE)
+  public String getRegister() { return "register"; }
+
 }

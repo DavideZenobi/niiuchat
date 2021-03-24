@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "spring.datasource.hikari")
 public class DataSourceConfiguration extends HikariConfig {
 
+  //Spring instancia automáticamente esta clase
+  //@param this = instancia DataSourceConfiguration
   @Bean
   public DataSource dataSource() {
     return new HikariDataSource(this);
