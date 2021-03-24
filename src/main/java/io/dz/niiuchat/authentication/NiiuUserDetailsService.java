@@ -1,6 +1,8 @@
 package io.dz.niiuchat.authentication;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.user.repository.RoleRepository;
+import io.dz.niiuchat.user.repository.UserRepository;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,7 +28,7 @@ public class NiiuUserDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    Users user = userRepository.getUser(username)
+    Users user = userRepository.get(username)
         .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found"));
 
     Set<GrantedAuthority> roles = roleRepository.getRoles(user.getId())

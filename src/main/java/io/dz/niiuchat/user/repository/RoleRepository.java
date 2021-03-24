@@ -1,4 +1,4 @@
-package io.dz.niiuchat.authentication;
+package io.dz.niiuchat.user.repository;
 
 import static io.dz.niiuchat.domain.tables.Roles.ROLES;
 import static io.dz.niiuchat.domain.tables.UsersRoles.USERS_ROLES;
