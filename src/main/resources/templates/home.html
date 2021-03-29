@@ -3,9 +3,39 @@
 <template th:replace="commons :: header"></template>
 <body>
 
+<!--
 <div id="app">
   <input type="text" v-model="myForm.textModel"><br>
   {{myForm.textModel}}
+</div>
+-->
+<div id="app">
+  <div id="container">
+    <div class="md-layout md-alignment-vertical">
+      <md-toolbar class="md-small">
+        <md-button class="md-icon-button">
+          <md-icon>home</md-icon>
+        </md-button>
+        <md-button class="md-icon-button">
+          <md-icon>more_vert</md-icon>
+        </md-button>
+      </md-toolbar>
+    </div>
+
+    <div class="md-layout">
+      <md-list>
+        <md-list-item>
+          <md-icon>move_to_inbox</md-icon>
+          <span class="md-list-item-text">Inbox</span>
+        </md-list-item>
+
+        <md-list-item>
+          <md-icon>add</md-icon>
+          <span class="md-list-item-text">Add</span>
+        </md-list-item>
+      </md-list>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -24,6 +54,16 @@
     });
   }, false);
 </script>
+
+<style>
+  #container {
+    width: 1000px;
+    height: 800px;
+    margin-left: 600px;
+    background-color: antiquewhite;
+    border: 1px solid black;
+  }
+</style>
 
 <template th:replace="commons :: after-imports"></template>
 
