@@ -4,18 +4,18 @@
 <body>
 
 <div id="app">
-  <div class="md-layout md-gutter" style="margin-top: 20vh;">
-    <div class="md-layout-item"></div>
-    <div class="md-layout-item">
+  <div class="md-layout md-alignment-center-center" style="height: 80vh;">
+    <div class="md-layout-item md-size-20">
+      <h2>Niiu Chat</h2>
       <form v-on:submit.prevent="onRegister">
         <md-field md-clearable>
-          <label for="usernameInput">Username</label>
+          <label for="usernameInput">Username (You will use the username to login)</label>
           <md-input v-model="username"
                     id="usernameInput"></md-input>
         </md-field>
 
         <md-field md-clearable>
-          <label for="emailInput">Email(You will use the email to login)</label>
+          <label for="emailInput">Email</label>
           <md-input v-model="email"
                     id="emailInput"></md-input>
         </md-field>
@@ -28,16 +28,15 @@
         </md-field>
 
         <md-field>
-          <label for="password2Input">Repeat Password</label>
+          <label for="passwordRepeatInput">Repeat Password</label>
           <md-input v-model="passwordRepeat"
                     type="password"
-                    id="password2Input"></md-input>
+                    id="passwordRepeatInput"></md-input>
         </md-field>
 
         <md-button class="md-raised btnLogin" type="submit">Register</md-button>
       </form>
     </div>
-    <div class="md-layout-item"></div>
   </div>
 </div>
 
@@ -74,8 +73,6 @@
         }
       }
     });
-
-
   }, false);
 </script>
 
