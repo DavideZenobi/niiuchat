@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(path = "")
 public class ViewController {
 
-  @GetMapping(path = {"/", "/index", "/index.html"})
+  @GetMapping(path = {"/", "/index", "/index.html"}, produces = MediaType.TEXT_HTML_VALUE)
   public String getIndex() {
     return "index";
   }

@@ -4,28 +4,31 @@
 <body>
 
 <div id="app">
-  <form action="/register" method="post" style="width: 20vw;">
+  <form v-on:submit.prevent="onRegister" style="width: 20vw;">
     <md-field md-clearable>
       <label for="usernameInput">Username</label>
-      <md-input name="username"
+      <md-input v-model="username"
                 id="usernameInput"></md-input>
     </md-field>
 
     <md-field md-clearable>
       <label for="emailInput">Email(You will use the email to login)</label>
-      <md-input name="email" id="emailInput"></md-input>
+      <md-input v-model="email"
+                id="emailInput"></md-input>
     </md-field>
 
     <md-field>
       <label for="passwordInput">Password</label>
-      <md-input type="password"
-                name="password"
+      <md-input v-model="password"
+                type="password"
                 id="passwordInput"></md-input>
     </md-field>
 
     <md-field>
       <label for="password2Input">Repeat Password</label>
-      <md-input type="password" name="password2" id="password2Input"></md-input>
+      <md-input v-model="passwordRepeat"
+                type="password"
+                id="password2Input"></md-input>
     </md-field>
 
     <md-button class="md-raised btnLogin" type="submit">Register</md-button>
@@ -36,18 +39,44 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const data = {
+      username: '',
+      password: '',
+      passwordRepeat: '',
+      email: ''
     }
 
     new Vue({
       el: '#app',
       data: data,
       methods: {
+        onRegister: async function() {
+          if (data.password !== data.passwordRepeat) {
+            return;
+          }
+
+          try {
+            await UserApi.register({
+              username: data.username,
+              password: data.password,
+              email: data.email
+            });
+
+            window.location = '/login';
+          } catch (err) {
+            console.log(err);
+            alert('Register failed. Check server logs.');
+          }
+        }
       }
     });
+
+
   }, false);
 </script>
 
 <template th:replace="commons :: after-imports"></template>
+
+<script src="/user-api.js"></script>
 
 </body>
 </html>
