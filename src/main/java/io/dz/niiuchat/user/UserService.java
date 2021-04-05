@@ -4,6 +4,7 @@ import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,13 +36,16 @@ public class UserService {
     userToCreate.setStatus(user.getStatus());
     userToCreate.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
 
-    return dslContext.transactionResult(configuration -> {
-      Users createdUser = userRepository.create(configuration, userToCreate);
+    return dslContext.transactionResult(configuration ->
+        createUserAndAddRole(configuration, userToCreate, DEFAULT_PUBLIC_ROLE));
+  }
 
-      userRepository.addRole(configuration, createdUser.getId(), DEFAULT_PUBLIC_ROLE);
+  public Users createUserAndAddRole(Configuration configuration, Users userToCreate, String role) {
+    Users createdUser = userRepository.create(configuration, userToCreate);
 
-      return createdUser;
-    });
+    userRepository.addRole(configuration, createdUser.getId(), role);
+
+    return createdUser;
   }
 
 }
