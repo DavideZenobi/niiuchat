@@ -5,6 +5,7 @@ import static io.dz.niiuchat.domain.tables.UsersRoles.USERS_ROLES;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import java.util.Optional;
+import java.util.List;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -57,6 +58,16 @@ public class UserRepository {
     user.setId(id);
 
     return user;
+  }
+
+  public List<Users> getAll() { return getAll(null); }
+
+  public List<Users> getAll(Configuration configuration) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    return currentContext.select().from(USERS).fetchInto(Users.class);
   }
 
   public void addRole(Long userId, String role) {

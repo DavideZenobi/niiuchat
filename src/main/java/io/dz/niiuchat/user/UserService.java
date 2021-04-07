@@ -4,6 +4,7 @@ import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -46,6 +47,11 @@ public class UserService {
     userRepository.addRole(configuration, createdUser.getId(), role);
 
     return createdUser;
+  }
+
+  public List<Users> getAll() {
+
+    return userRepository.getAll();
   }
 
 }
