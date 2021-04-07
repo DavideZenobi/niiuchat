@@ -1,42 +1,58 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <template th:replace="commons :: header"></template>
+
+<style>
+  body {
+    background-image: url("/images/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+</style>
 <body>
 
 <div id="app">
   <div class="md-layout md-alignment-center-center" style="height: 80vh;">
-    <div class="md-layout-item md-size-20">
-      <h2>NiiuChat</h2>
-      <form v-on:submit.prevent="onRegister">
-        <md-field md-clearable>
-          <label for="usernameInput">Username (You will use the username to login)</label>
-          <md-input v-model="username"
-                    id="usernameInput"></md-input>
-        </md-field>
+    <md-card class="md-layout-item md-size-20">
+      <md-card-header>
+        <div class="md-title">Register</div>
+      </md-card-header>
 
-        <md-field md-clearable>
-          <label for="emailInput">Email</label>
-          <md-input v-model="email"
-                    id="emailInput"></md-input>
-        </md-field>
+      <md-card-content>
+        <form v-on:submit.prevent="onRegister">
+          <md-field md-clearable>
+            <label for="usernameInput">Username</label>
+            <md-input v-model="username"
+                      id="usernameInput"></md-input>
+          </md-field>
 
-        <md-field>
-          <label for="passwordInput">Password</label>
-          <md-input v-model="password"
-                    type="password"
-                    id="passwordInput"></md-input>
-        </md-field>
+          <md-field md-clearable>
+            <label for="emailInput">Email (You will use the email to login)</label>
+            <md-input v-model="email"
+                      id="emailInput"></md-input>
+          </md-field>
 
-        <md-field>
-          <label for="passwordRepeatInput">Repeat Password</label>
-          <md-input v-model="passwordRepeat"
-                    type="password"
-                    id="passwordRepeatInput"></md-input>
-        </md-field>
+          <md-field>
+            <label for="passwordInput">Password</label>
+            <md-input v-model="password"
+                      type="password"
+                      id="passwordInput"></md-input>
+          </md-field>
 
-        <md-button class="md-raised btnLogin" type="submit">Register</md-button>
-      </form>
-    </div>
+          <md-field>
+            <label for="passwordRepeatInput">Repeat Password</label>
+            <md-input v-model="passwordRepeat"
+                      type="password"
+                      id="passwordRepeatInput"></md-input>
+          </md-field>
+
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <md-button class="md-raised md-primary btnLogin" type="submit">Register</md-button>
+            <span><a href="/login">Cancel</a></span>
+          </div>
+        </form>
+      </md-card-content>
+    </md-card>
   </div>
 </div>
 

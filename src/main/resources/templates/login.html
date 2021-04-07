@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <template th:replace="commons :: header"></template>
+
+<style>
+  body {
+    background-image: url("/images/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+</style>
 <body>
 
 <div id="app">
-  <form action="/login" method="post" style="width: 20vw;">
-    <md-field md-clearable>
-      <label for="usernameInput">Username</label>
-      <md-input name="username"
-                id="usernameInput"></md-input>
-    </md-field>
+  <div class="md-layout md-alignment-center-center" style="height: 80vh;">
+      <md-card class="md-layout-item md-size-20">
+        <md-card-header>
+          <div class="md-title">Login</div>
+        </md-card-header>
 
-    <md-field>
-      <label for="passwordInput">Password</label>
-      <md-input type="password"
-                name="password"
-                id="passwordInput"></md-input>
-    </md-field>
+        <md-card-content>
+          <form action="/login" method="post">
+            <md-field md-clearable>
+              <label for="usernameInput">Username</label>
+              <md-input name="username"
+                        id="usernameInput"></md-input>
+            </md-field>
 
-    <md-button class="md-raised btnLogin" type="submit">Login</md-button>
-  </form>
+            <md-field>
+              <label for="passwordInput">Password</label>
+              <md-input type="password"
+                        name="password"
+                        id="passwordInput"></md-input>
+            </md-field>
 
-  <!--<form action="/login" method="post">
-    <label for="usernameInput">Username: </label><input id="usernameInput" type="text" name="username"><br>
-    <label for="passwordInput">Password: </label><input id="passwordInput" type="password" name="password"><br>
-    <input type="submit" value="Login">
-  </form>-->
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <md-button class="md-raised md-primary btnLogin" type="submit">Login</md-button>
+              <span>New? <a href="/register">Create new account</a></span>
+            </div>
+          </form>
+        </md-card-content>
+      </md-card>
+  </div>
 </div>
 
 <script>
