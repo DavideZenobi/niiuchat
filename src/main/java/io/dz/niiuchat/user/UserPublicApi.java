@@ -33,9 +33,4 @@ public class UserPublicApi {
     return RegisterOutput.fromUser(result);
   }
 
-  @GetMapping(path = "/")
-  public void getAll() {
-
-  }
-
 }

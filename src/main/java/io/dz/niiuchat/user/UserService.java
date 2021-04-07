@@ -48,9 +48,10 @@ public class UserService {
 
     return createdUser;
   }
-/*
+
   public List<Users> getAll() {
 
+    return userRepository.getAll();
   }
-*/
+
 }

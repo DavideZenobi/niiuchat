@@ -21,6 +21,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         .antMatchers("/favicon.ico").permitAll()
         .antMatchers("/register").permitAll()
         .antMatchers("/public/**").permitAll()
+        .antMatchers("/private/**").permitAll()
         .anyRequest().authenticated()
         .and()
         .formLogin()

@@ -60,6 +60,8 @@ public class UserRepository {
     return user;
   }
 
+  public List<Users> getAll() { return getAll(null); }
+
   public List<Users> getAll(Configuration configuration) {
     DSLContext currentContext = (configuration != null) ?
         DSL.using(configuration) :
