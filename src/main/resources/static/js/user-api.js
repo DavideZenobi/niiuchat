@@ -7,7 +7,7 @@
     }
 
     getAll() {
-      return axios.get('/private/api/users/');
+      return axios.get('/api/users/');
     }
 
   }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/private/api/users")
+@RequestMapping(path = "/api/users")
 public class UserApi {
 
   private final UserService userService;
