@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
-    <link rel="stylesheet" href="/css/stylesheet.css">
+    <link rel="stylesheet" href="/components/profile/niiu-profile.css">
   </head>
 </template>
 
@@ -22,6 +22,7 @@
   <script th:unless="${#arrays.contains(@environment.getActiveProfiles(), 'production')}"
           src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-material"></script>
+  <script src="/components/profile/niiu-profile.js"></script>
 
   <script>
     Vue.use(VueMaterial.default);
