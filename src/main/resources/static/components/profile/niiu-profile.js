@@ -37,7 +37,7 @@
       };
     },
     mounted: async function () {
-      data.user = await UserApi.getCurrentUser();
+      this.user = await UserApi.getCurrentUser();
     }
   });
 
