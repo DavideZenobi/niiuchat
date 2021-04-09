@@ -7,6 +7,7 @@ import java.security.Principal;
 import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,5 +37,10 @@ public class UserApi {
   public Users getProfile(Principal principal) {
     return NiiuUser.from(principal).getUser();
   }
+
+  /*@PostMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public Users updateUser(Users user) {
+
+  }*/
 
 }

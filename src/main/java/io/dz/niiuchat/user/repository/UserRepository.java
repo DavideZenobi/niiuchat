@@ -70,6 +70,21 @@ public class UserRepository {
     return currentContext.select().from(USERS).fetchInto(Users.class);
   }
 
+  /*public Users update(Users user) { return update(null, user);}*/
+
+  public void update(Configuration configuration, Users user) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    /*return currentContext.update(USERS)
+        .set(USERS.USERNAME, user.getUsername())
+        .set(USERS.PASSWORD, user.getPassword())
+        .set(USERS.EMAIL, user.getEmail())
+        .where(USERS.ID.eq(user.getId()))
+        .returningResult(USERS.ID);*/
+  }
+
   public void addRole(Long userId, String role) {
     addRole(null, userId, role);
   }
