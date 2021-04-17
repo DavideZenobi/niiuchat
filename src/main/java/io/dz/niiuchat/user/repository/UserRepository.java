@@ -4,8 +4,9 @@ import static io.dz.niiuchat.domain.tables.Users.USERS;
 import static io.dz.niiuchat.domain.tables.UsersRoles.USERS_ROLES;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
-import java.util.Optional;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -70,19 +71,39 @@ public class UserRepository {
     return currentContext.select().from(USERS).fetchInto(Users.class);
   }
 
-  /*public Users update(Users user) { return update(null, user);}*/
+  public Users updateData(Users user) {
+    return updateData(null, user);
+  }
 
-  public void update(Configuration configuration, Users user) {
+  public Users updateData(Configuration configuration, Users user) {
     DSLContext currentContext = (configuration != null) ?
         DSL.using(configuration) :
         dslContext;
 
-    /*return currentContext.update(USERS)
+    currentContext.update(USERS)
         .set(USERS.USERNAME, user.getUsername())
-        .set(USERS.PASSWORD, user.getPassword())
         .set(USERS.EMAIL, user.getEmail())
+        .set(USERS.UPDATE_DATE, user.getUpdateDate())
         .where(USERS.ID.eq(user.getId()))
-        .returningResult(USERS.ID);*/
+        .execute();
+
+    return user;
+  }
+
+  public void updatePassword(Long id, String password, LocalDateTime updateDate) {
+    updatePassword(null, id, password, updateDate);
+  }
+
+  public void updatePassword(Configuration configuration, Long id, String password, LocalDateTime updateDate) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    currentContext.update(USERS)
+        .set(USERS.PASSWORD, password)
+        .set(USERS.UPDATE_DATE, updateDate)
+        .where(USERS.ID.eq(id))
+        .execute();
   }
 
   public void addRole(Long userId, String role) {

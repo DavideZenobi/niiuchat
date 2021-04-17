@@ -6,15 +6,15 @@
       <form action="/update" method="post">
         <md-field>
             <label>Username</label>
-            <md-input class="initial"></md-input>
+            <md-input v-model="user.username" class="initial"></md-input>
         </md-field>
         <md-field>
             <label>Email</label>
-            <md-input></md-input>
+            <md-input v-model="user.email"></md-input>
         </md-field>
         <md-field>
             <label>Password</label>
-            <md-input type="password"></md-input>
+            <md-input v-model="user.password" type="password"></md-input>
         </md-field>
         <md-field>
             <label>New Password</label>
@@ -34,10 +34,11 @@
     data: function () {
       return {
         user: {}
-      };
+      }
     },
     mounted: async function () {
-      this.user = await UserApi.getCurrentUser();
+      const response = await UserApi.getCurrentUser();
+      this.user = response.data;
     }
   });
 

@@ -54,4 +54,14 @@ public class UserService {
     return userRepository.getAll();
   }
 
+  public Users updateData(Users user) {
+    user.setUpdateDate(LocalDateTime.now(ZoneOffset.UTC));
+
+    return userRepository.updateData(user);
+  }
+
+  public void updatePassword(Long id, String password) {
+    userRepository.updatePassword(id, passwordEncoder.encode(password), LocalDateTime.now(ZoneOffset.UTC));
+  }
+
 }
