@@ -1,7 +1,7 @@
 (() => {
 
   const template = `
-    <div class="np-container">
+    <div class="main-area-container">
       <h2>User data</h2>
       <form action="/update" method="post">
         <md-field>

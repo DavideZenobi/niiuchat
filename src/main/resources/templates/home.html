@@ -12,7 +12,7 @@
     <md-app-drawer md-permanent="full">
       <niiu-toolbar @chat-clicked="() => changeState('chat')"
                     @settings-clicked="() => changeState('profile')"
-                    @game-clicked="() => changeState('game')"
+                    @games-library-clicked="() => changeState('gamesLibrary')"
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
       <md-list>
@@ -26,16 +26,8 @@
 
     <md-app-content>
       <niiu-profile v-if="state.id === 'profile'"></niiu-profile>
-      <div v-else-if="state.id === 'chat'">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam, similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo, neque.</p>
-      </div>
+      <niiu-games-library v-else-if="state.id === 'gamesLibrary'"></niiu-games-library>
+      <niiu-chat v-else-if="state.id === 'chat'"></niiu-chat>
     </md-app-content>
   </md-app>
 </div>
@@ -52,9 +44,9 @@
         id: 'profile',
         title: 'Profile'
       },
-      game: {
-        id: 'game',
-        title: 'Game'
+      gamesLibrary: {
+        id: 'gamesLibrary',
+        title: 'Games Library'
       }
     };
 

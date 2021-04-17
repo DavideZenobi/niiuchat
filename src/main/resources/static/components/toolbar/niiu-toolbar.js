@@ -7,7 +7,7 @@
         <md-icon>chat</md-icon>
       </md-button>
       <md-button class="md-icon-button"
-                 @click="$emit('game-clicked')">
+                 @click="$emit('games-library-clicked')">
         <md-icon>sports_esports</md-icon>
       </md-button>
       <md-button class="md-icon-button"
