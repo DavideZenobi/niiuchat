@@ -1,0 +1,19 @@
+/* generics */
+[v-cloak] {
+    display: none;
+}
+
+/* app.html */
+.niiu-main-container {
+    height: 80vh;
+    margin: auto;
+    min-height: 768px;
+    min-width: 1366px;
+    width: 70vw;
+}
+
+/* commons */
+.main-area-container {
+    height: 100%;
+    width: 100%;
+}

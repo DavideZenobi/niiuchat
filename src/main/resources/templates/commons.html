@@ -10,12 +10,13 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
-    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/niiu-common.css">
     <link rel="stylesheet" href="/components/profile/niiu-profile.css">
   </head>
 </template>
 
 <template th:fragment="after-imports" th:remove="tag">
+  <!-- libraries -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script th:if="${#arrays.contains(@environment.getActiveProfiles(), 'production')}"
@@ -23,11 +24,15 @@
   <script th:unless="${#arrays.contains(@environment.getActiveProfiles(), 'production')}"
           src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-material"></script>
+
+  <!-- functions -->
+  <script src="/js/user-api.js"></script>
+
+  <!-- niiu components -->
   <script src="/components/toolbar/niiu-toolbar.js"></script>
   <script src="/components/games-library/niiu-games-library.js"></script>
   <script src="/components/profile/niiu-profile.js"></script>
   <script src="/components/chat/niiu-chat.js"></script>
-  <script src="/js/user-api.js"></script>
 
   <script>
     Vue.use(VueMaterial.default);
