@@ -10,6 +10,10 @@
       return axios.get('/api/users/');
     }
 
+    getCurrentUser() {
+      return axios.get('/api/users/profile');
+    }
+
   }
 
   window.UserApi = new UserApi();

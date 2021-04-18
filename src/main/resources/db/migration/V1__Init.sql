@@ -1,14 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
-drop table if exists users_roles;
-drop table if exists user_status;
-drop table if exists users;
-drop table if exists roles;
-drop table if exists chats;
-drop table if exists messages;
-drop table if exists historical_messages;
-drop table if exists attachments;
-
 -- user_status
 create table user_status(id varchar(20) primary key);
 
@@ -117,7 +108,5 @@ create table attachments(id varchar(36) primary key,
                              on update cascade
                              on delete set null
 );
-
-# create or replace
 
 SET FOREIGN_KEY_CHECKS = 1;

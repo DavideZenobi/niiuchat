@@ -14,9 +14,9 @@ public class ViewController {
     return "index";
   }
 
-  @GetMapping(path = "/home", produces = MediaType.TEXT_HTML_VALUE)
+  @GetMapping(path = "/app", produces = MediaType.TEXT_HTML_VALUE)
   public String getHome() {
-    return "home";
+    return "app";
   }
 
   @GetMapping(path = "/login", produces = MediaType.TEXT_HTML_VALUE)
