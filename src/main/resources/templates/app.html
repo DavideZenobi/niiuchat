@@ -30,6 +30,9 @@
       <niiu-profile v-if="selectedState === 'profile'"></niiu-profile>
       <niiu-games-library v-else-if="selectedState === 'gamesLibrary'"></niiu-games-library>
       <niiu-chat v-else-if="selectedState === 'chat'"></niiu-chat>
+      <div v-else style="text-align: center;">
+        <img src="/images/app-default.jpg" alt="moguri-img">
+      </div>
     </md-app-content>
   </md-app>
 </div>
@@ -66,7 +69,7 @@
           return data.state ? data.state.id : null;
         },
         selectedStateTitle: function() {
-          return data.state ? data.state.title : '';
+          return data.state ? data.state.title : 'Niiu!';
         }
       },
       methods: {
