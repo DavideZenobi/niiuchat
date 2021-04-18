@@ -17,9 +17,7 @@
     props: [],
     template: template,
     data: function () {
-      return {
-        user: {}
-      }
+      return { }
     },
     mounted: async function () {
 

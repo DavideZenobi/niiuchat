@@ -44,8 +44,7 @@
       },
       profile: {
         id: 'profile',
-        title: 'Profile',
-
+        title: 'Profile'
       },
       gamesLibrary: {
         id: 'gamesLibrary',
@@ -73,11 +72,8 @@
       methods: {
         changeState: function(newState) {
           data.loading = true;
-
-          setTimeout(() => {
-            data.state = states[newState];
-            data.loading = false;
-          }, 1000);
+          data.state = states[newState];
+          data.loading = false;
         }
       }
     });
