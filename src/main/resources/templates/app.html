@@ -73,8 +73,11 @@
       methods: {
         changeState: function(newState) {
           data.loading = true;
-          data.state = states[newState];
-          data.loading = false;
+
+          setTimeout(() => {
+            data.state = states[newState];
+            data.loading = false;
+          }, 1000);
         }
       }
     });
