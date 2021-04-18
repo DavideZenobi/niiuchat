@@ -12,8 +12,13 @@
     width: 70vw;
 }
 
+.niiu-main-content {
+    padding: 0;
+}
+
 /* commons */
 .main-area-container {
     height: 100%;
+    padding: 2%;
     width: 100%;
 }

@@ -6,7 +6,7 @@
 <div id="app" v-cloak>
   <md-app class="niiu-main-container" md-waterfall md-mode="fixed">
     <md-app-toolbar class="md-primary">
-      <span class="md-title">{{state.title}}</span>
+      <span class="md-title">{{selectedStateTitle}}</span>
     </md-app-toolbar>
 
     <md-app-drawer md-permanent="full">
@@ -20,14 +20,16 @@
           <md-icon>add</md-icon>
           <span class="md-list-item-text">Create conversation</span>
         </md-list-item>
-
       </md-list>
     </md-app-drawer>
 
-    <md-app-content>
-      <niiu-profile v-if="state.id === 'profile'"></niiu-profile>
-      <niiu-games-library v-else-if="state.id === 'gamesLibrary'"></niiu-games-library>
-      <niiu-chat v-else-if="state.id === 'chat'"></niiu-chat>
+    <md-app-content class="niiu-main-content">
+      <niiu-progress-bar :show="loading"></niiu-progress-bar>
+
+      <!-- Contextual content -->
+      <niiu-profile v-if="selectedState === 'profile'"></niiu-profile>
+      <niiu-games-library v-else-if="selectedState === 'gamesLibrary'"></niiu-games-library>
+      <niiu-chat v-else-if="selectedState === 'chat'"></niiu-chat>
     </md-app-content>
   </md-app>
 </div>
@@ -42,7 +44,8 @@
       },
       profile: {
         id: 'profile',
-        title: 'Profile'
+        title: 'Profile',
+
       },
       gamesLibrary: {
         id: 'gamesLibrary',
@@ -51,16 +54,27 @@
     };
 
     const data = {
-      state: states['chat'],
+      state: null,
+      loading: false,
       window: window
     };
 
     new Vue({
       el: '#app',
       data: data,
+      computed: {
+        selectedState: function() {
+          return data.state ? data.state.id : null;
+        },
+        selectedStateTitle: function() {
+          return data.state ? data.state.title : '';
+        }
+      },
       methods: {
         changeState: function(newState) {
+          data.loading = true;
           data.state = states[newState];
+          data.loading = false;
         }
       }
     });
