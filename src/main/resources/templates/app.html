@@ -24,8 +24,6 @@
     </md-app-drawer>
 
     <md-app-content class="niiu-main-content">
-      <niiu-progress-bar :show="loading"></niiu-progress-bar>
-
       <!-- Contextual content -->
       <niiu-profile v-if="selectedState === 'profile'"></niiu-profile>
       <niiu-games-library v-else-if="selectedState === 'gamesLibrary'"></niiu-games-library>
@@ -57,7 +55,6 @@
 
     const data = {
       state: null,
-      loading: false,
       window: window
     };
 
@@ -74,9 +71,7 @@
       },
       methods: {
         changeState: function(newState) {
-          data.loading = true;
           data.state = states[newState];
-          data.loading = false;
         }
       }
     });
