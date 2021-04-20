@@ -31,13 +31,9 @@ public class NiiuUserDetailsService implements UserDetailsService {
     Users user = userRepository.get(username)
         .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " was not found"));
 
-    Set<GrantedAuthority> roles = roleRepository.getRoles(user.getId())
-        .stream()
-        .map(SimpleGrantedAuthority::new)
-        .collect(Collectors.toSet());
+    Set<GrantedAuthority> roles = roleRepository.getRolesAsGrantedAuthorities(user.getId());
 
     String password = user.getPassword();
-
     user.setPassword(null);
 
     return new NiiuUser(

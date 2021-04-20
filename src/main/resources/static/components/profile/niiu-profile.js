@@ -18,7 +18,11 @@
                 <md-input v-model="$v.user.email.$model"></md-input>
                 <span class="md-error">{{emailErrorText}}</span>
             </md-field>
-            <md-button class="md-raised md-primary" type="submit">Update</md-button>
+            <md-button class="md-raised md-primary"
+                       type="submit"
+                       v-show="!updateProfileAnimating"
+                       :disabled="profileUpdateDisabled">Update</md-button>
+            <niiu-check-animation :show="updateProfileAnimating"></niiu-check-animation>
           </form>
         </div>
         
@@ -66,6 +70,9 @@
         if (!this.$v.user.email.required) return 'Field is required';
         else if (!this.$v.user.email.valid) return 'Must be a valid email';
         else return '';
+      },
+      profileUpdateDisabled: function () {
+        return this.$v.$invalid;
       }
     },
     data: function () {
@@ -75,7 +82,8 @@
           /*oldPassword: '',*/
           newPassword: '',
           repeatNewPassword: ''
-        }
+        },
+        updateProfileAnimating: false
       }
     },
     validations: {
@@ -103,6 +111,8 @@
             username: this.user.username,
             email: this.user.email
           });
+
+          this.profileUpdateAnimation();
         } catch (err) {
           console.log(err);
           alert('Update failed. Check server logs.');
@@ -121,6 +131,10 @@
           console.log(err);
           alert('Update failed. Check server logs.');
         }
+      },
+      profileUpdateAnimation: function () {
+        this.updateProfileAnimating = true;
+        setTimeout(() => this.updateProfileAnimating = false, 1500);
       }
     }
   });

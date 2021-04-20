@@ -16,6 +16,17 @@
     padding: 0;
 }
 
+/* niiu-check-animation.js */
+.button-animation-area {
+    text-align: center;
+    height: 48px;
+    width: 88px;
+}
+
+.button-animation-area img {
+    height: 36px;
+}
+
 /* commons */
 .main-area-container {
     height: 100%;

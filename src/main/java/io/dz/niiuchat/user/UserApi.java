@@ -3,7 +3,6 @@ package io.dz.niiuchat.user;
 import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.dto.UpdateUserDataInput;
-import io.dz.niiuchat.user.dto.UpdateUserDataOutput;
 import io.dz.niiuchat.user.dto.UpdateUserPasswordInput;
 import java.security.Principal;
 import java.util.List;
@@ -44,16 +43,16 @@ public class UserApi {
   }
 
   @PostMapping(path = "/update/data", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-  public UpdateUserDataOutput postUpdateUserData(
+  public ResponseEntity<Object> postUpdateUserData(
       Principal principal,
       @Valid @RequestBody UpdateUserDataInput body
   ) {
     Users userToUpdate = body.toUser();
     userToUpdate.setId(NiiuUser.from(principal).getUser().getId());
 
-    Users updatedUser = userService.updateData(userToUpdate);
+    userService.updateData(userToUpdate);
 
-    return UpdateUserDataOutput.fromUser(updatedUser);
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping(path = "/update/password", consumes = MediaType.APPLICATION_JSON_VALUE)

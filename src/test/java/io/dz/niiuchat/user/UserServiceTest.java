@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
@@ -25,6 +26,9 @@ class UserServiceTest {
   private UserRepository userRepository;
 
   @Mock
+  private RoleRepository roleRepository;
+
+  @Mock
   private DSLContext dslContext;
 
   @Mock
@@ -36,7 +40,7 @@ class UserServiceTest {
   void init() {
     when(userRepository.create(any(), any())).thenReturn(new Users());
 
-    userService = new UserService(userRepository, dslContext, passwordEncoder);
+    userService = new UserService(userRepository, roleRepository, dslContext, passwordEncoder);
   }
 
   @Test
