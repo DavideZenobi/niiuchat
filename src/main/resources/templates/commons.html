@@ -23,6 +23,8 @@
   <script th:unless="${#arrays.contains(@environment.getActiveProfiles(), 'production')}"
           src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
   <script src="https://unpkg.com/vue-material"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuelidate@0.7.6/dist/vuelidate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuelidate@0.7.6/dist/validators.min.js"></script>
 
   <!-- functions -->
   <script src="/js/user-api.js"></script>
@@ -36,6 +38,7 @@
 
   <script>
     Vue.use(VueMaterial.default);
+    Vue.use(vuelidate.default);
   </script>
 </template>
 </html>
