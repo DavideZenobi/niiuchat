@@ -22,6 +22,10 @@
       return axios.post('/api/users/update/password', data);
     }
 
+    getChatByGroupId() {
+      return axios.get('/api/chats/chat');
+    }
+
   }
 
   window.UserApi = new UserApi();

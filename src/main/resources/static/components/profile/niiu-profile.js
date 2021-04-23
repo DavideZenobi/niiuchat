@@ -29,22 +29,25 @@
         <div>
           <h2>Password</h2>
           <form v-on:submit.prevent="onUpdatePassword">
-            <!--<md-field>
-                <label>Old password</label>
-                <md-input v-model="passwords.oldPassword" 
-                          type="password"></md-input>
-            </md-field>-->
-            <md-field>
+            <md-field :class="newPasswordClasses">
                 <label>New password</label>
-                <md-input v-model="passwords.newPassword"
-                          type="password"></md-input>
+                <md-input v-model="$v.newPassword.$model"
+                          type="password"
+                          maxlength="16"></md-input>
+                <span class="md-error">{{newPasswordErrorText}}</span>
             </md-field>
-            <md-field>
+            <md-field :class="repeatNewPasswordClasses">
                 <label>Repeat new password</label>
-                <md-input v-model="passwords.repeatNewPassword"
-                          type="password"></md-input>
+                <md-input v-model="$v.repeatNewPassword.$model"
+                          type="password"
+                          maxlength="16"></md-input>
+                <span class="md-error">{{repeatNewPasswordErrorText}}</span>
             </md-field>
-            <md-button class="md-raised md-accent" type="submit">Update</md-button>
+            <md-button class="md-raised md-accent" 
+                       type="submit"
+                       v-show="!updatePasswordProfileAnimating"
+                       :disabled="passwordUpdateDisabled">Update</md-button>
+            <niiu-check-animation :show="updatePasswordProfileAnimating"></niiu-check-animation>
           </form>
         </div>
       </div>
@@ -72,18 +75,34 @@
         else return '';
       },
       profileUpdateDisabled: function () {
-        return this.$v.$invalid;
+        return this.isProfileDataInvalid();
+      },
+      newPasswordClasses: function () {
+        return (!this.$v.newPassword.required || !this.$v.newPassword.minLength) && this.$v.newPassword.$dirty ? 'md-invalid' : '';
+      },
+      newPasswordErrorText: function () {
+        if (!this.$v.newPassword.required) return 'Field is required';
+        else if (!this.$v.newPassword.minLength) return `Password must have at least ${this.$v.newPassword.$params.minLength.min} letters.`;
+        else return '';
+      },
+      repeatNewPasswordClasses: function () {
+        return (!this.$v.repeatNewPassword.required || !this.$v.repeatNewPassword.minLength) && this.$v.repeatNewPassword.$dirty ? 'md-invalid' : '';
+      },
+      repeatNewPasswordErrorText: function () {
+        if (!this.$v.repeatNewPassword.required) return 'Field is required';
+        else if (!this.$v.repeatNewPassword.minLength) return `Password must have at least ${this.$v.repeatNewPassword.$params.minLength.min} letters.`;
+      },
+      passwordUpdateDisabled: function () {
+        return this.isProfilePasswordInvalid();
       }
     },
     data: function () {
       return {
         user: { },
-        passwords: {
-          /*oldPassword: '',*/
-          newPassword: '',
-          repeatNewPassword: ''
-        },
-        updateProfileAnimating: false
+        newPassword: '',
+        repeatNewPassword: '',
+        updateProfileAnimating: false,
+        updatePasswordProfileAnimating: false
       }
     },
     validations: {
@@ -96,6 +115,14 @@
           required: validators.required,
           valid: validators.email
         }
+      },
+      newPassword: {
+        required: validators.required,
+        minLength: validators.minLength(4)
+      },
+      repeatNewPassword: {
+        required: validators.required,
+        minLength: validators.minLength(4)
       }
     },
     mounted: async function () {
@@ -103,8 +130,17 @@
       this.user = response.data;
     },
     methods: {
+      isProfileDataInvalid: function () {
+        return this.$v.user.username.$invalid ||
+            this.$v.user.email.$invalid;
+      },
+      isProfilePasswordInvalid: function () {
+        return this.$v.newPassword.$invalid ||
+            this.$v.repeatNewPassword.$invalid ||
+            this.newPassword !== this.repeatNewPassword;
+      },
       onUpdateProfile: async function () {
-        if (this.$v.$invalid) return;
+        if (this.isProfileDataInvalid()) return;
 
         try {
           await UserApi.updateUser({
@@ -119,14 +155,14 @@
         }
       },
       onUpdatePassword: async function () {
-        try {
-          if (this.passwords.newPassword !== this.passwords.repeatNewPassword) {
-            return;
-          }
+        if (this.isProfilePasswordInvalid()) return;
 
+        try {
           await UserApi.updatePassword({
-            password: this.passwords.newPassword
+            password: this.newPassword
           });
+
+          this.profilePasswordUpdateAnimation();
         } catch (err) {
           console.log(err);
           alert('Update failed. Check server logs.');
@@ -135,6 +171,10 @@
       profileUpdateAnimation: function () {
         this.updateProfileAnimating = true;
         setTimeout(() => this.updateProfileAnimating = false, 1500);
+      },
+      profilePasswordUpdateAnimation: function () {
+        this.updatePasswordProfileAnimating = true;
+        setTimeout(() => this.updatePasswordProfileAnimating = false, 1500);
       }
     }
   });
