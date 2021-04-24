@@ -9,8 +9,11 @@ import static org.mockito.Mockito.when;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
+import org.jooq.tools.jdbc.MockConnection;
+import org.jooq.tools.jdbc.MockDataProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,15 +32,17 @@ class UserServiceTest {
   private RoleRepository roleRepository;
 
   @Mock
-  private DSLContext dslContext;
-
-  @Mock
   private PasswordEncoder passwordEncoder;
 
+  private DSLContext dslContext;
   private UserService userService;
 
   @BeforeEach
   void init() {
+    MockDataProvider provider = mock(MockDataProvider.class);
+    MockConnection connection = new MockConnection(provider);
+    dslContext = DSL.using(connection, SQLDialect.MARIADB);
+
     when(userRepository.create(any(), any())).thenReturn(new Users());
 
     userService = new UserService(userRepository, roleRepository, dslContext, passwordEncoder);
@@ -46,7 +51,7 @@ class UserServiceTest {
   @Test
   @DisplayName(value = "createUserAndAddRole(...) creates a user and attaches the given role")
   void createUserAndAddRole_1() {
-    userService.createUserAndAddRole(mock(Configuration.class), new Users(), "RANDOM");
+    userService.createUser(new Users());
 
     verify(userRepository).create(any(), any());
     verify(userRepository).addRole(any(), any(), any());

@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Set;
-import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -48,16 +47,13 @@ public class UserService {
     userToCreate.setStatus(user.getStatus());
     userToCreate.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
 
-    return dslContext.transactionResult(configuration ->
-        createUserAndAddRole(configuration, userToCreate, DEFAULT_PUBLIC_ROLE));
-  }
+    return dslContext.transactionResult(configuration -> {
+      Users createdUser = userRepository.create(configuration, userToCreate);
 
-  public Users createUserAndAddRole(Configuration configuration, Users userToCreate, String role) {
-    Users createdUser = userRepository.create(configuration, userToCreate);
+      userRepository.addRole(configuration, createdUser.getId(), DEFAULT_PUBLIC_ROLE);
 
-    userRepository.addRole(configuration, createdUser.getId(), role);
-
-    return createdUser;
+      return createdUser;
+    });
   }
 
   public List<Users> getAll() {
