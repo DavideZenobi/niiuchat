@@ -4,8 +4,26 @@
     <div class="main-area-container">
       <div class="padded-view">
         <div>
-          <h2>User data</h2>
           <form v-on:submit.prevent="onUpdateProfile">
+            <div style="width: 100%; text-align: center;">
+              <md-card style="display: inline-block;">
+                <md-card-media>
+                  <md-card-media>
+                    <img :src="profileImage" alt="avatar" style="max-height: 18vh; width: auto;">
+                  </md-card-media>
+                  <md-card-actions>
+                    <md-button class="md-icon-button" @click="$refs.avatarInput.click()">
+                      <md-icon>upload</md-icon>
+                    </md-button>
+                  </md-card-actions>
+                </md-card-media>
+              </md-card>
+            </div>
+            <input ref="avatarInput"
+                   type="file"
+                   accept="image/*"
+                   v-show="false"
+                   @change="onImageChange" />
             <md-field :class="usernameClasses">
                 <label>Username</label>
                 <md-input v-model="$v.user.username.$model"
@@ -58,6 +76,16 @@
   Vue.component('niiu-profile', {
     props: [],
     template: template,
+    data: function () {
+      return {
+        user: { },
+        newPassword: '',
+        repeatNewPassword: '',
+        updateProfileAnimating: false,
+        updatePasswordProfileAnimating: false,
+        profileImage: '/images/default_avatar.png'
+      }
+    },
     computed: {
       usernameClasses: function () {
         return !this.$v.user.username.required || !this.$v.user.username.minLength ? 'md-invalid' : '';
@@ -96,15 +124,6 @@
       },
       passwordUpdateDisabled: function () {
         return this.isProfilePasswordInvalid();
-      }
-    },
-    data: function () {
-      return {
-        user: { },
-        newPassword: '',
-        repeatNewPassword: '',
-        updateProfileAnimating: false,
-        updatePasswordProfileAnimating: false
       }
     },
     validations: {
@@ -171,6 +190,17 @@
           console.log(err);
           alert('Update failed. Check server logs.');
         }
+      },
+      onImageChange: function(evt) {
+        const files = evt.target.files;
+
+        const fr = new FileReader();
+        fr.onload = () => {
+          this.profileImage = fr.result;
+        };
+        fr.readAsDataURL(files[0]);
+
+        console.log(files);
       },
       profileUpdateAnimation: function () {
         this.updateProfileAnimating = true;
