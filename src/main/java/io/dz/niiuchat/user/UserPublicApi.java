@@ -1,7 +1,7 @@
 package io.dz.niiuchat.user;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
-import io.dz.niiuchat.user.register.RegisterInput;
+import io.dz.niiuchat.user.dto.RegisterInput;
 import io.dz.niiuchat.user.register.RegisterOutput;
 import javax.validation.Valid;
 import org.springframework.http.MediaType;

@@ -9,13 +9,14 @@
             <md-field :class="usernameClasses">
                 <label>Username</label>
                 <md-input v-model="$v.user.username.$model"
-                          class="initial"></md-input>
+                          maxlength="16"></md-input>
                 <span class="md-error">{{usernameErrorText}}</span>
             </md-field>
             
             <md-field :class="emailClasses">
                 <label>Email</label>
-                <md-input v-model="$v.user.email.$model"></md-input>
+                <md-input v-model="$v.user.email.$model"
+                          type="email"></md-input>
                 <span class="md-error">{{emailErrorText}}</span>
             </md-field>
             <md-button class="md-raised md-primary"
@@ -33,14 +34,14 @@
                 <label>New password</label>
                 <md-input v-model="$v.newPassword.$model"
                           type="password"
-                          maxlength="16"></md-input>
+                          maxlength="20"></md-input>
                 <span class="md-error">{{newPasswordErrorText}}</span>
             </md-field>
             <md-field :class="repeatNewPasswordClasses">
                 <label>Repeat new password</label>
                 <md-input v-model="$v.repeatNewPassword.$model"
                           type="password"
-                          maxlength="16"></md-input>
+                          maxlength="20"></md-input>
                 <span class="md-error">{{repeatNewPasswordErrorText}}</span>
             </md-field>
             <md-button class="md-raised md-accent" 
@@ -63,7 +64,7 @@
       },
       usernameErrorText: function () {
         if (!this.$v.user.username.required) return 'Field is required';
-        else if (!this.$v.user.username.minLength) return `Name must have at least ${this.$v.user.username.$params.minLength.min} letters.`;
+        else if (!this.$v.user.username.minLength) return `Name must have at least ${this.$v.user.username.$params.minLength.min} letters`;
         else return '';
       },
       emailClasses: function () {
@@ -82,15 +83,16 @@
       },
       newPasswordErrorText: function () {
         if (!this.$v.newPassword.required) return 'Field is required';
-        else if (!this.$v.newPassword.minLength) return `Password must have at least ${this.$v.newPassword.$params.minLength.min} letters.`;
+        else if (!this.$v.newPassword.minLength) return `Password must have at least ${this.$v.newPassword.$params.minLength.min} letters`;
         else return '';
       },
       repeatNewPasswordClasses: function () {
-        return (!this.$v.repeatNewPassword.required || !this.$v.repeatNewPassword.minLength) && this.$v.repeatNewPassword.$dirty ? 'md-invalid' : '';
+        return (!this.$v.repeatNewPassword.required || !this.$v.repeatNewPassword.minLength || !this.$v.repeatNewPassword.passwordMatch) && this.$v.repeatNewPassword.$dirty ? 'md-invalid' : '';
       },
       repeatNewPasswordErrorText: function () {
         if (!this.$v.repeatNewPassword.required) return 'Field is required';
-        else if (!this.$v.repeatNewPassword.minLength) return `Password must have at least ${this.$v.repeatNewPassword.$params.minLength.min} letters.`;
+        else if (!this.$v.repeatNewPassword.minLength) return `Password must have at least ${this.$v.repeatNewPassword.$params.minLength.min} letters`;
+        else if (!this.$v.repeatNewPassword.passwordMatch) return `Passwords don't match`;
       },
       passwordUpdateDisabled: function () {
         return this.isProfilePasswordInvalid();
@@ -122,7 +124,10 @@
       },
       repeatNewPassword: {
         required: validators.required,
-        minLength: validators.minLength(4)
+        minLength: validators.minLength(4),
+        passwordMatch: function (value) {
+          return value === this.newPassword;
+        }
       }
     },
     mounted: async function () {
@@ -136,8 +141,7 @@
       },
       isProfilePasswordInvalid: function () {
         return this.$v.newPassword.$invalid ||
-            this.$v.repeatNewPassword.$invalid ||
-            this.newPassword !== this.repeatNewPassword;
+            this.$v.repeatNewPassword.$invalid;
       },
       onUpdateProfile: async function () {
         if (this.isProfileDataInvalid()) return;

@@ -1,21 +1,20 @@
-package io.dz.niiuchat.user.register;
+package io.dz.niiuchat.user.dto;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import lombok.Data;
 
 @Data
 public class RegisterInput {
 
-  @NotBlank
+  @Size(min = 4, max = 16)
   private String username;
 
   @Email
   private String email;
 
-  @Size(min = 4, max = 16)
+  @Size(min = 4, max = 20)
   private String password;
 
   public Users toUser() {
