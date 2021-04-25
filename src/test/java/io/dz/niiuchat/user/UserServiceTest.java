@@ -59,7 +59,7 @@ class UserServiceTest {
   @DisplayName(value = "Create a user and its roles")
   void createUserAndRoles() {
     when(passwordEncoder.encode(anyString())).thenReturn(USER_ENCRYPTED_PASSWORD);
-    when(userRepository.create(any(Configuration.class), any(Users.class))).thenReturn(stubbedUser());
+    when(userRepository.create(any(Configuration.class), any(Users.class))).thenReturn(stubbedUser(false));
 
     userService.createUser(stubbedUser());
 
