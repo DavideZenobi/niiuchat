@@ -4,26 +4,12 @@
     <div class="main-area-container">
       <div class="padded-view">
         <div>
+          <div style="width: 100%; text-align: center;">
+            <niiu-profile-image-upload :image="profileImage"
+                                       @image-selected="onImageChange"></niiu-profile-image-upload>
+          </div>
+          
           <form v-on:submit.prevent="onUpdateProfile">
-            <div style="width: 100%; text-align: center;">
-              <md-card style="display: inline-block;">
-                <md-card-media>
-                  <md-card-media>
-                    <img :src="profileImage" alt="avatar" style="max-height: 18vh; width: auto;">
-                  </md-card-media>
-                  <md-card-actions>
-                    <md-button class="md-icon-button" @click="$refs.avatarInput.click()">
-                      <md-icon>upload</md-icon>
-                    </md-button>
-                  </md-card-actions>
-                </md-card-media>
-              </md-card>
-            </div>
-            <input ref="avatarInput"
-                   type="file"
-                   accept="image/*"
-                   v-show="false"
-                   @change="onImageChange" />
             <md-field :class="usernameClasses">
                 <label>Username</label>
                 <md-input v-model="$v.user.username.$model"
@@ -191,9 +177,7 @@
           alert('Update failed. Check server logs.');
         }
       },
-      onImageChange: function(evt) {
-        const files = evt.target.files;
-
+      onImageChange: function(files) {
         const fr = new FileReader();
         fr.onload = () => {
           this.profileImage = fr.result;
