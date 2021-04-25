@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-  private static final String DEFAULT_PUBLIC_ROLE = "ROLE_USER";
+  public static final String DEFAULT_PUBLIC_ROLE = "ROLE_USER";
 
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
@@ -70,7 +70,7 @@ public class UserService {
     Users updatedUser = userRepository.get(user.getEmail())
         .orElseThrow();
 
-    Set<GrantedAuthority> roles = roleRepository.getRolesAsGrantedAuthorities(user.getId());
+    Set<GrantedAuthority> roles = roleRepository.getRolesAsGrantedAuthorities(updatedUser.getId());
 
     String password = updatedUser.getPassword();
     updatedUser.setPassword(null);
@@ -78,7 +78,7 @@ public class UserService {
     NiiuUser niiuUser = new NiiuUser(
         updatedUser.getUsername(),
         password,
-        UsersStatus.ACTIVE.toString().equals(user.getStatus()),
+        UsersStatus.ACTIVE.toString().equals(updatedUser.getStatus()),
         true,
         true,
         true,
