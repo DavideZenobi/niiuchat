@@ -4,7 +4,7 @@ import static io.dz.niiuchat.user.UserTestUtil.USER_EMAIL;
 import static io.dz.niiuchat.user.UserTestUtil.USER_ENCRYPTED_PASSWORD;
 import static io.dz.niiuchat.user.UserTestUtil.USER_ID;
 import static io.dz.niiuchat.user.UserTestUtil.USER_PLAIN_PASSWORD;
-import static io.dz.niiuchat.user.UserTestUtil.stubbedUser;
+import static io.dz.niiuchat.user.UserTestUtil.dummyUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -60,9 +60,10 @@ class UserServiceTest {
   @DisplayName(value = "Create a user and its roles")
   void createUserAndRoles() {
     when(passwordEncoder.encode(anyString())).thenReturn(USER_ENCRYPTED_PASSWORD);
-    when(userRepository.create(any(Configuration.class), any(Users.class))).thenReturn(stubbedUser(false));
+    when(userRepository.create(any(Configuration.class), any(Users.class))).thenReturn(
+        dummyUser(false));
 
-    userService.createUser(stubbedUser());
+    userService.createUser(dummyUser());
 
     verify(passwordEncoder).encode(USER_PLAIN_PASSWORD);
     verifyNoMoreInteractions(passwordEncoder);
@@ -84,9 +85,9 @@ class UserServiceTest {
   @Test
   @DisplayName(value = "Update user data")
   void updateUserData() {
-    when(userRepository.get(any())).thenReturn(Optional.of(stubbedUser(false)));
+    when(userRepository.get(any())).thenReturn(Optional.of(dummyUser(false)));
 
-    userService.updateData(stubbedUser());
+    userService.updateData(dummyUser());
 
     verify(userRepository).updateData(any(Users.class));
     verify(userRepository).get(USER_EMAIL);

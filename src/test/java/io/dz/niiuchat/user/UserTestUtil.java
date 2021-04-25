@@ -15,11 +15,11 @@ public class UserTestUtil {
   public static final LocalDateTime USER_CREATE_DATE = LocalDateTime.now();
   public static final LocalDateTime USER_UPDATE_DATE = LocalDateTime.now().plusDays(5);
 
-  public static Users stubbedUser() {
-    return stubbedUser(true);
+  public static Users dummyUser() {
+    return dummyUser(true);
   }
 
-  public static Users stubbedUser(boolean plainPassword) {
+  public static Users dummyUser(boolean plainPassword) {
     Users user = new Users();
     user.setId(USER_ID);
     user.setUsername(USER_USERNAME);
