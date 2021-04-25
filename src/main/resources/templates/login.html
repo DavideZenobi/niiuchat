@@ -11,47 +11,62 @@
 </style>
 <body>
 
-<div id="app">
+<div id="app" v-cloak>
   <div class="md-layout md-alignment-center-center" style="height: 80vh;">
-      <md-card class="md-layout-item md-size-20">
-        <md-card-header>
-          <div class="md-title">Login</div>
-        </md-card-header>
+    <md-card class="md-layout-item md-size-20">
+      <md-card-header>
+        <div class="md-title">Login</div>
+      </md-card-header>
 
-        <md-card-content>
-          <form action="/login" method="post">
-            <md-field md-clearable>
-              <label for="emailInput">Email</label>
-              <md-input name="username"
-                        id="emailInput"></md-input>
-            </md-field>
+      <md-card-content>
+        <form action="/login" method="post">
+          <md-field :class="emailClasses" md-clearable>
+            <label>Email</label>
+            <md-input name="username"
+                      v-model="$v.email.$model"
+                      type="email"></md-input>
+            <span class="md-error">{{emailErrorText}}</span>
+          </md-field>
 
-            <md-field>
-              <label for="passwordInput">Password</label>
-              <md-input type="password"
-                        name="password"
-                        id="passwordInput"></md-input>
-            </md-field>
+          <md-field>
+            <label>Password</label>
+            <md-input type="password"
+                      name="password"
+                      id="passwordInput"></md-input>
+          </md-field>
 
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <md-button class="md-raised md-primary btnLogin" type="submit">Login</md-button>
-              <span>New? <a href="/register">Create new account</a></span>
-            </div>
-          </form>
-        </md-card-content>
-      </md-card>
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <md-button class="md-raised md-primary btnLogin" type="submit">Login</md-button>
+            <span>New? <a href="/register">Create new account</a></span>
+          </div>
+        </form>
+      </md-card-content>
+    </md-card>
   </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const data = {
+      email: ''
     }
 
     new Vue({
       el: '#app',
       data: data,
-      methods: {
+      computed: {
+        emailClasses: function () {
+          return !this.$v.email.valid ? 'md-invalid' : '';
+        },
+        emailErrorText: function () {
+          if (!this.$v.email.valid) return 'Must be a valid email';
+          else return '';
+        }
+      },
+      validations: {
+        email: {
+          valid: validators.email
+        }
       }
     });
   }, false);
