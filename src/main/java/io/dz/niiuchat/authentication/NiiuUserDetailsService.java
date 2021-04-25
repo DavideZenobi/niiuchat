@@ -4,9 +4,7 @@ import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -39,7 +37,7 @@ public class NiiuUserDetailsService implements UserDetailsService {
     return new NiiuUser(
         user.getUsername(),
         password,
-        UsersStatus.ACTIVE.toString().equals(user.getStatus()),
+        UserStatus.ACTIVE.toString().equals(user.getStatus()),
         true,
         true,
         true,

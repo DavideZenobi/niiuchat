@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import io.dz.niiuchat.authentication.UserRole;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
@@ -67,7 +68,7 @@ class UserServiceTest {
     verifyNoMoreInteractions(passwordEncoder);
 
     verify(userRepository).create(any(Configuration.class), any(Users.class));
-    verify(userRepository).addRole(any(Configuration.class), eq(USER_ID), eq(UserService.DEFAULT_PUBLIC_ROLE));
+    verify(userRepository).addRole(any(Configuration.class), eq(USER_ID), eq(UserRole.ROLE_USER.toString()));
     verifyNoMoreInteractions(userRepository);
   }
 

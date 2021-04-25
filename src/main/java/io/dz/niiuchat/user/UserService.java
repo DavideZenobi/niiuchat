@@ -1,7 +1,8 @@
 package io.dz.niiuchat.user;
 
 import io.dz.niiuchat.authentication.NiiuUser;
-import io.dz.niiuchat.authentication.UsersStatus;
+import io.dz.niiuchat.authentication.UserRole;
+import io.dz.niiuchat.authentication.UserStatus;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
@@ -19,8 +20,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-
-  public static final String DEFAULT_PUBLIC_ROLE = "ROLE_USER";
 
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
@@ -50,7 +49,7 @@ public class UserService {
     return dslContext.transactionResult(configuration -> {
       Users createdUser = userRepository.create(configuration, userToCreate);
 
-      userRepository.addRole(configuration, createdUser.getId(), DEFAULT_PUBLIC_ROLE);
+      userRepository.addRole(configuration, createdUser.getId(), UserRole.ROLE_USER.toString());
 
       return createdUser;
     });
@@ -78,7 +77,7 @@ public class UserService {
     NiiuUser niiuUser = new NiiuUser(
         updatedUser.getUsername(),
         password,
-        UsersStatus.ACTIVE.toString().equals(updatedUser.getStatus()),
+        UserStatus.ACTIVE.toString().equals(updatedUser.getStatus()),
         true,
         true,
         true,

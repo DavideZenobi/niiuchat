@@ -1,5 +1,6 @@
 package io.dz.niiuchat.user;
 
+import io.dz.niiuchat.authentication.UserStatus;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import java.time.LocalDateTime;
 
@@ -10,7 +11,7 @@ public class UserTestUtil {
   public static final String USER_EMAIL = "test_user@niiuchat.com";
   public static final String USER_PLAIN_PASSWORD = "random";
   public static final String USER_ENCRYPTED_PASSWORD = "encoded";
-  public static final String USER_STATUS = "ACTIVE";
+  public static final String USER_STATUS = UserStatus.ACTIVE.toString();
   public static final LocalDateTime USER_CREATE_DATE = LocalDateTime.now();
   public static final LocalDateTime USER_UPDATE_DATE = LocalDateTime.now().plusDays(5);
 

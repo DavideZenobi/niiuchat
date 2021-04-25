@@ -1,6 +1,6 @@
 package io.dz.niiuchat.authentication;
 
-public enum UsersStatus {
+public enum UserStatus {
   ACTIVE,
   INACTIVE
 }
