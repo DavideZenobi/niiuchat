@@ -22,6 +22,15 @@
       return axios.post('/api/users/update/password', data);
     }
 
+    updateAvatar(formData) {
+      return axios({
+        method: 'post',
+        url: '/api/users/update/avatar',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+    }
+
     getChatByGroupId() {
       return axios.get('/api/chats/chat');
     }

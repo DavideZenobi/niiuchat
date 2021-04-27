@@ -2,6 +2,7 @@
 
   const template = `
     <div class="main-area-container">
+      <niiu-progress-bar :show="uploadingImage"></niiu-progress-bar>
       <div class="padded-view">
         <div style="width: 100%; text-align: center;">
           <niiu-profile-image-upload :image="profileImage"
@@ -17,6 +18,10 @@
           <niiu-profile-form-password></niiu-profile-form-password>
         </div>
       </div>
+      
+      <md-snackbar md-position="center" :md-duration="3000" :md-active.sync="showImageUploadedAlert">
+        <span>Avatar image updated correctly</span>
+      </md-snackbar>
     </div>
   `;
 
@@ -25,6 +30,8 @@
     data: function () {
       return {
         user: { },
+        uploadingImage: false,
+        showImageUploadedAlert: false,
         profileImage: '/images/default_avatar.png'
       }
     },
@@ -34,13 +41,27 @@
     },
     methods: {
       onImageChange: function(files) {
+        this.uploadingImage = true;
         const fr = new FileReader();
-        fr.onload = () => {
-          this.profileImage = fr.result;
-        };
-        fr.readAsDataURL(files[0]);
 
-        console.log(files);
+        // Callback after the image has been read
+        fr.onload = async () => {
+          const formData = new FormData();
+          formData.append('avatar', files[0]);
+
+          try {
+            await UserApi.updateAvatar(formData);
+
+            this.profileImage = fr.result;
+            this.showImageUploadedAlert = true;
+          } catch (err) {
+            alert(err);
+          } finally {
+            this.uploadingImage = false;
+          }
+        };
+
+        fr.readAsDataURL(files[0]);
       }
     }
   });
