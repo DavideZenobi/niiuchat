@@ -11,7 +11,7 @@ spring:
       jdbc-url: jdbc:mysql://localhost:3306/niiuchat
       username: root
       password:
-      maximum-pool-size: 20
+      maximum-pool-size: 10
 
 springdoc:
   api-docs:
