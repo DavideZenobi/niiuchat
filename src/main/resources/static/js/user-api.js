@@ -31,10 +31,6 @@
       });
     }
 
-    getChatByGroupId() {
-      return axios.get('/api/chats/chat');
-    }
-
   }
 
   window.UserApi = new UserApi();

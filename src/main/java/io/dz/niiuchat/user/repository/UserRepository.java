@@ -71,6 +71,14 @@ public class UserRepository {
     return currentContext.select().from(USERS).fetchInto(Users.class);
   }
 
+  public List<Users> getByIds(List<Long> ids) {
+    return dslContext.select()
+        .from(USERS)
+        .where(USERS.ID.in(ids))
+        .fetchInto(Users.class);
+
+  }
+
   public Users updateData(Users user) {
     return updateData(null, user);
   }
