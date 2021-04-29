@@ -5,11 +5,11 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class StorageRepository {
+public class FilesRepository {
 
   private final DSLContext dslContext;
 
-  public StorageRepository(DSLContext dslContext) {
+  public FilesRepository(DSLContext dslContext) {
     this.dslContext = dslContext;
   }
 

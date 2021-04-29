@@ -2,12 +2,15 @@ package io.dz.niiuchat.user;
 
 import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.domain.tables.pojos.Users;
-import io.dz.niiuchat.storage.StorageService;
 import io.dz.niiuchat.user.dto.UpdateUserDataInput;
 import io.dz.niiuchat.user.dto.UpdateUserPasswordInput;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,15 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(path = "/api/users")
 public class UserApi {
 
-  private final UserService userService;
-  private final StorageService storageService;
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserApi.class);
 
-  public UserApi(
-      UserService userService,
-      StorageService storageService
-  ) {
+  private final UserService userService;
+
+  public UserApi(UserService userService) {
     this.userService = userService;
-    this.storageService = storageService;
   }
 
   @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -78,9 +78,14 @@ public class UserApi {
       Principal principal,
       @RequestParam("avatar") MultipartFile file
   ) {
+    try (InputStream fileStream = file.getInputStream()) {
+      userService.upsertAvatar(fileStream, NiiuUser.from(principal).getUser().getId());
 
-    storageService.setFile(NiiuUser.from(principal).getUser().getId(), file);
-    return ResponseEntity.noContent().build();
+      return ResponseEntity.noContent().build();
+    } catch (IOException e) {
+      LOGGER.error("Error uploading Avatar", e);
+      return ResponseEntity.badRequest().build();
+    }
   }
 
 }
