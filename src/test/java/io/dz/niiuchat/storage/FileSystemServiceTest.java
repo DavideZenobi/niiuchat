@@ -21,7 +21,7 @@ class FileSystemServiceTest {
 
   @Test
   void fileIsImage() {
-    File image = Paths.get(System.getProperty("user.home"), "Pictures", "497ca14763086602e93eb16bcc095318.jpg").toFile();
+    File image = Paths.get(System.getProperty("user.home"),  "EdF3ZG-XgAA5zIL.jpg").toFile();
 
     boolean isImage = fileSystemService.fileIsImage(image);
 

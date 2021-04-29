@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 public class FileSystemService {
 
   public boolean fileIsImage(File file) {
+    if(!file.exists()) {
+      return false;
+    }
+
     return file.getAbsolutePath().endsWith(".jpg");
   }
 

@@ -2,6 +2,7 @@ package io.dz.niiuchat.user;
 
 import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.storage.StorageService;
 import io.dz.niiuchat.user.dto.UpdateUserDataInput;
 import io.dz.niiuchat.user.dto.UpdateUserPasswordInput;
 import java.security.Principal;
@@ -22,9 +23,14 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserApi {
 
   private final UserService userService;
+  private final StorageService storageService;
 
-  public UserApi(UserService userService) {
+  public UserApi(
+      UserService userService,
+      StorageService storageService
+  ) {
     this.userService = userService;
+    this.storageService = storageService;
   }
 
   @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,6 +78,8 @@ public class UserApi {
       Principal principal,
       @RequestParam("avatar") MultipartFile file
   ) {
+
+    storageService.setFile(NiiuUser.from(principal).getUser().getId(), file);
     return ResponseEntity.noContent().build();
   }
 
