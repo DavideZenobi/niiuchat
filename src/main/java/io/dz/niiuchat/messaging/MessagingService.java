@@ -27,11 +27,11 @@ public class MessagingService {
     this.dslContext = dslContext;
   }
 
-  public List<Users> getGroups(Long userId) {
+  public List<GroupOutput> getGroups(Long userId) {
     List<String> groupIds = chatRepository.getGroupIdsByUserId(userId);
-    List<Long> userIds = chatRepository.getUserIdsByGroupId(userId, groupIds);
-    List<Users> users = userRepository.getByIds(userIds);
 
-    return users;
+    List<GroupOutput> groups = chatRepository.getGroupsByGroupIds(userId, groupIds);
+
+    return groups;
   }
 }

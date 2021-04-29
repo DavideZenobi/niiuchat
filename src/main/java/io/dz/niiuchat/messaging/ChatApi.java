@@ -21,7 +21,7 @@ public class ChatApi {
   public ChatApi(MessagingService messagingService) { this.messagingService = messagingService; }
 
   @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<Users> getGroups(Principal principal) {
+  public List<GroupOutput> getGroups(Principal principal) {
 
     return messagingService.getGroups(NiiuUser.from(principal).getUser().getId());
 
