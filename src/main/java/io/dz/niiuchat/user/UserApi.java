@@ -4,6 +4,7 @@ import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.dto.UpdateUserDataInput;
 import io.dz.niiuchat.user.dto.UpdateUserPasswordInput;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
@@ -78,7 +79,7 @@ public class UserApi {
       Principal principal,
       @RequestParam("avatar") MultipartFile file
   ) {
-    try (InputStream fileStream = file.getInputStream()) {
+    try (InputStream fileStream = new BufferedInputStream(file.getInputStream(), (int) file.getSize())) {
       userService.upsertAvatar(fileStream, NiiuUser.from(principal).getUser().getId());
 
       return ResponseEntity.noContent().build();

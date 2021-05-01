@@ -8,6 +8,7 @@ import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -112,7 +113,8 @@ public class UserService {
       }
 
       Image image = ImageIO.read(inputStream);
-      image = imageService.resizeImage(image);
+      Image resizedImage = imageService.resizeImage(image, 64, 64);
+      imageService.saveImage(resizedImage);
 
       // ...
     } catch (IOException e) {
