@@ -1,43 +1,67 @@
 package io.dz.niiuchat.common;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import javax.imageio.ImageIO;
-import org.apache.tika.Tika;
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.mime.MediaType;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageService {
 
-  private final Tika tika = new Tika();
+  private final TikaConfig tikaConfig = TikaConfig.getDefaultConfig();
   private final Set<String> acceptedImages = Set.of("image/jpeg", "image/png");
+  private final Path avatarsDirectory = Paths.get(System.getProperty("user.home"), "niiu", "avatars");
 
-  public boolean isImage(InputStream inputStream) throws IOException {
-    String mimeType = tika.detect(inputStream);
-
-    return acceptedImages.contains(mimeType);
+  public boolean isImage(MediaType mediaType) {
+    return acceptedImages.contains(mediaType.toString());
   }
 
-  public Image resizeImage(Image originalImage, int width, int height) {
-    Image resultingImage = originalImage.getScaledInstance(width, height, Image.SCALE_DEFAULT);
-    BufferedImage outputImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
-    return outputImage;
+  public MediaType getMediaType(InputStream inputStream) throws IOException {
+    return tikaConfig.getMimeRepository().detect(inputStream, new Metadata());
   }
 
-  public void saveImage(Image image) throws IOException {
-    saveImage(image, Paths.get(System.getProperty("user.home"), "resized.png").tostring());
+  public BufferedImage resizeAvatar(Image originalImage) {
+    return resizeImage(originalImage, 64, 64);
   }
 
-  public void saveImage(Image image, String path) throws IOException {
-    String path = System.getProperty("user.home");
-    File outputFile = Paths.get(path, "resized.png").toFile();
-    ImageIO.write((BufferedImage) image, "png", outputFile);
+  public BufferedImage resizeImage(Image originalImage, int width, int height) {
+    BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+
+    Graphics2D graphics2D = resizedImage.createGraphics();
+    graphics2D.drawImage(originalImage, 0, 0, width, height, null);
+    graphics2D.dispose();
+
+    return resizedImage;
+  }
+
+  public String saveAvatar(BufferedImage image, String format, Long userId) throws IOException {
+    String imageName = userId + "." + format;
+
+    if (Files.notExists(avatarsDirectory)) {
+      Files.createDirectories(avatarsDirectory);
+    }
+
+    String imageFullPath = avatarsDirectory.resolve(imageName).toString();
+
+    saveImage(image, imageFullPath, format);
+
+    return imageFullPath;
+  }
+
+  public void saveImage(BufferedImage image, String path, String format) throws IOException {
+    File outputFile = new File(path);
+    ImageIO.write(image, format, outputFile);
   }
 
 }
