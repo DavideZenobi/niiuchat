@@ -5,16 +5,26 @@ import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.dto.UpdateUserDataInput;
 import io.dz.niiuchat.user.dto.UpdateUserPasswordInput;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +59,19 @@ public class UserApi {
   @GetMapping(path = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
   public Users getProfile(Principal principal) {
     return NiiuUser.from(principal).getUser();
+  }
+
+  @GetMapping(path = "/{id}/avatar")
+  public ResponseEntity<byte[]> getProfile(
+      Principal principal,
+      @PathVariable Long id
+  ) throws IOException {
+    byte[] data = Files.readAllBytes(Path.of("/home/redru/Pictures/497ca14763086602e93eb16bcc095318.jpg"));
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", "image/jpg");
+
+    return new ResponseEntity<>(data, headers, HttpStatus.OK);
   }
 
   @PostMapping(path = "/update/data", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
