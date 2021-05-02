@@ -14,10 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ImageService {
 
-  private final TikaConfig tikaConfig = TikaConfig.getDefaultConfig();
-  private final Set<String> acceptedImages = Set.of("image/jpeg", "image/png");
+  public static final int AVATAR_DEFAULT_WIDTH = 64;
+  public static final int AVATAR_DEFAULT_HEIGHT = 64;
 
-  public boolean isImage(MediaType mediaType) {
+  private final TikaConfig tikaConfig = TikaConfig.getDefaultConfig();
+  private final Set<String> acceptedImages = Set.of("image/jpg", "image/jpeg", "image/png");
+
+  public boolean isAcceptedImage(MediaType mediaType) {
     return acceptedImages.contains(mediaType.toString());
   }
 
@@ -26,7 +29,7 @@ public class ImageService {
   }
 
   public BufferedImage resizeAvatar(Image originalImage) {
-    return resizeImage(originalImage, 64, 64);
+    return resizeImage(originalImage, AVATAR_DEFAULT_WIDTH, AVATAR_DEFAULT_HEIGHT);
   }
 
   public BufferedImage resizeImage(Image originalImage, int width, int height) {

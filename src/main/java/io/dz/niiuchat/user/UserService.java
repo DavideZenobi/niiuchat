@@ -128,7 +128,7 @@ public class UserService {
     try {
       MediaType avatarMediaType = imageService.getMediaType(inputStream);
 
-      if (!imageService.isImage(avatarMediaType)) {
+      if (!imageService.isAcceptedImage(avatarMediaType)) {
         throw new RuntimeException("File is not image");
       }
 
