@@ -16,6 +16,9 @@ import static org.mockito.Mockito.when;
 import io.dz.niiuchat.authentication.UserRole;
 import io.dz.niiuchat.common.ImageService;
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.storage.FileService;
+import io.dz.niiuchat.storage.repository.FileRepository;
+import io.dz.niiuchat.storage.StorageService;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -41,10 +44,19 @@ class UserServiceTest {
   private ImageService imageService;
 
   @Mock
+  private StorageService storageService;
+
+  @Mock
+  private FileService fileService;
+
+  @Mock
   private UserRepository userRepository;
 
   @Mock
   private RoleRepository roleRepository;
+
+  @Mock
+  private FileRepository fileRepository;
 
   @Mock
   private PasswordEncoder passwordEncoder;
@@ -57,11 +69,11 @@ class UserServiceTest {
     MockConnection connection = new MockConnection(provider);
     DSLContext dsl = DSL.using(connection, SQLDialect.MARIADB);
 
-    userService = new UserService(imageService, userRepository, roleRepository, dsl, passwordEncoder);
+    userService = new UserService(imageService, storageService, fileService, userRepository, roleRepository, fileRepository, dsl, passwordEncoder);
   }
 
   @Test
-  @DisplayName(value = "Create a user and its roles")
+  @DisplayName("Create a user and its roles")
   void createUserAndRoles() {
     when(passwordEncoder.encode(anyString())).thenReturn(USER_ENCRYPTED_PASSWORD);
     when(userRepository.create(any(Configuration.class), any(Users.class))).thenReturn(
@@ -78,7 +90,7 @@ class UserServiceTest {
   }
 
   @Test
-  @DisplayName(value = "Retrieve all users")
+  @DisplayName("Retrieve all users")
   void retrieveAllUsers() {
     userService.getAll();
 
@@ -87,7 +99,7 @@ class UserServiceTest {
   }
 
   @Test
-  @DisplayName(value = "Update user data")
+  @DisplayName("Update user data")
   void updateUserData() {
     when(userRepository.get(any())).thenReturn(Optional.of(dummyUser(false)));
 
@@ -102,7 +114,7 @@ class UserServiceTest {
   }
 
   @Test
-  @DisplayName(value = "Update user password")
+  @DisplayName("Update user password")
   void updateUserPassword() {
     when(passwordEncoder.encode(anyString())).thenReturn(USER_ENCRYPTED_PASSWORD);
 
@@ -113,6 +125,12 @@ class UserServiceTest {
 
     verify(userRepository).updatePassword(eq(USER_ID), eq(USER_ENCRYPTED_PASSWORD), any(LocalDateTime.class));
     verifyNoMoreInteractions(userRepository);
+  }
+
+  @Test
+  @DisplayName("Get a valid avatar data file for a given user")
+  void getAvatarForGivenUser() {
+//    assertThat(userService.findAvatar(1L)).isNotEmpty();
   }
 
 }

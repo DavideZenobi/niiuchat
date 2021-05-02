@@ -3,14 +3,9 @@ package io.dz.niiuchat.common;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Set;
-import javax.imageio.ImageIO;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
@@ -21,7 +16,6 @@ public class ImageService {
 
   private final TikaConfig tikaConfig = TikaConfig.getDefaultConfig();
   private final Set<String> acceptedImages = Set.of("image/jpeg", "image/png");
-  private final Path avatarsDirectory = Paths.get(System.getProperty("user.home"), "niiu", "avatars");
 
   public boolean isImage(MediaType mediaType) {
     return acceptedImages.contains(mediaType.toString());
@@ -43,25 +37,6 @@ public class ImageService {
     graphics2D.dispose();
 
     return resizedImage;
-  }
-
-  public String saveAvatar(BufferedImage image, String format, Long userId) throws IOException {
-    String imageName = userId + "." + format;
-
-    if (Files.notExists(avatarsDirectory)) {
-      Files.createDirectories(avatarsDirectory);
-    }
-
-    String imageFullPath = avatarsDirectory.resolve(imageName).toString();
-
-    saveImage(image, imageFullPath, format);
-
-    return imageFullPath;
-  }
-
-  public void saveImage(BufferedImage image, String path, String format) throws IOException {
-    File outputFile = new File(path);
-    ImageIO.write(image, format, outputFile);
   }
 
 }

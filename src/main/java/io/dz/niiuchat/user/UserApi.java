@@ -2,23 +2,18 @@ package io.dz.niiuchat.user;
 
 import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.user.dto.AvatarDto;
 import io.dz.niiuchat.user.dto.UpdateUserDataInput;
 import io.dz.niiuchat.user.dto.UpdateUserPasswordInput;
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -61,17 +56,24 @@ public class UserApi {
     return NiiuUser.from(principal).getUser();
   }
 
-  @GetMapping(path = "/{id}/avatar")
-  public ResponseEntity<byte[]> getProfile(
+  @GetMapping(path = "/{userId}/avatar")
+  public ResponseEntity<FileSystemResource> getProfile(
       Principal principal,
-      @PathVariable Long id
-  ) throws IOException {
-    byte[] data = Files.readAllBytes(Path.of("/home/redru/Pictures/497ca14763086602e93eb16bcc095318.jpg"));
+      @PathVariable Long userId
+  ) {
+    var avatarOptional = userService.findAvatar(userId);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Content-Type", "image/jpg");
+    if (avatarOptional.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
 
-    return new ResponseEntity<>(data, headers, HttpStatus.OK);
+    AvatarDto avatarData = avatarOptional.get();
+
+    var headers = new HttpHeaders();
+    headers.add(HttpHeaders.CONTENT_TYPE, avatarData.getMediaType());
+    headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(avatarData.getAvatarFile().length()));
+
+    return new ResponseEntity<>(new FileSystemResource(avatarData.getAvatarFile()), headers, HttpStatus.OK);
   }
 
   @PostMapping(path = "/update/data", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
