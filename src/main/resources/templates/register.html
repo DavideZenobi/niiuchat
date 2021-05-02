@@ -20,7 +20,7 @@
 
       <md-card-content>
         <form v-on:submit.prevent="onRegister">
-          <md-field md-clearable :class="usernameClasses">
+          <md-field :class="usernameClasses">
             <label>Username</label>
             <md-input v-model="$v.userData.username.$model"
                       maxlength="16"
@@ -101,7 +101,7 @@
         },
         passwordErrorText: function () {
           if (!this.$v.userData.password.required) return 'Field is required';
-          else if (!this.$v.userData.password.minLength) return `Password must have at least ${this.$v.userData.password.$params.minLength} letters`;
+          else if (!this.$v.userData.password.minLength) return `Password must have at least ${this.$v.userData.password.$params.minLength.min} letters`;
           else return '';
         },
         repeatPasswordClasses: function () {
@@ -110,7 +110,7 @@
         repeatPasswordErrorText: function () {
           if (!this.$v.userData.repeatPassword.required) return 'Field is required';
           else if (!this.$v.userData.repeatPassword.minLength) return `Password must have at least ${this.$v.userData.repeatPassword.$params.minLength} letters`;
-          else return '';
+          else if (!this.$v.userData.repeatPassword.passwordMatch) `Passwords don't match`;
         },
         registerDisabled: function () {
           return this.isPasswordInvalid();
@@ -132,7 +132,7 @@
           },
           repeatPassword: {
             required: validators.required,
-            minLength: validators.minLength(4)
+            minLength: validators.minLength(4),
             passwordMatch: function (value) {
               return value === this.password;
             }
@@ -145,7 +145,7 @@
               this.$v.userData.repeatPassword.$invalid;
         },
         onRegister: async function() {
-          if (data.password !== data.passwordRepeat) {
+          if (this.isPasswordInvalid()) {
             return;
           }
 
