@@ -1,4 +1,4 @@
-package io.dz.niiuchat.common;
+package io.dz.niiuchat.storage.dto;
 
 import lombok.Data;
 

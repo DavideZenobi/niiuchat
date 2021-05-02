@@ -1,6 +1,7 @@
-package io.dz.niiuchat.storage;
+package io.dz.niiuchat.storage.service;
 
 import io.dz.niiuchat.domain.tables.pojos.Files;
+import io.dz.niiuchat.storage.FileType;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import org.springframework.stereotype.Service;

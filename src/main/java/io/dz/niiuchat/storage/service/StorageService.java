@@ -1,10 +1,10 @@
-package io.dz.niiuchat.storage;
+package io.dz.niiuchat.storage.service;
 
 import static io.dz.niiuchat.storage.StorageVars.AVATARS_ABSOLUTE_PATH;
 import static io.dz.niiuchat.storage.StorageVars.AVATARS_RELATIVE_PATH;
 import static io.dz.niiuchat.storage.StorageVars.ROOT_ABSOLUTE_PATH;
 
-import io.dz.niiuchat.common.ImagePaths;
+import io.dz.niiuchat.storage.dto.ImagePaths;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
