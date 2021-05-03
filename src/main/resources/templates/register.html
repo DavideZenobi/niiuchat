@@ -85,11 +85,11 @@
         },
         usernameErrorText: function () {
           if (!this.$v.userData.username.required) return 'Field is required';
-          else if (!this.$v.userData.username.minLength) return `Password must have at least ${this.$v.userData.username.$params.minLength.min} letters`;
+          else if (!this.$v.userData.username.minLength) return `Username must have at least ${this.$v.userData.username.$params.minLength.min} letters`;
           else return '';
         },
         emailClasses: function () {
-          return !this.$v.userData.email.required || !this.$v.userData.email.valid ? 'md-invalid' : '';
+          return (!this.$v.userData.email.required || !this.$v.userData.email.valid) && this.$v.userData.email.$dirty ? 'md-invalid' : '';
         },
         emailErrorText: function () {
           if (!this.$v.userData.email.required) return 'Field is required';
@@ -134,7 +134,7 @@
             required: validators.required,
             minLength: validators.minLength(4),
             passwordMatch: function (value) {
-              return value === this.password;
+              return value === this.userData.password;
             }
           }
         }
@@ -151,9 +151,9 @@
 
           try {
             await UserApi.register({
-              username: data.username,
-              password: data.password,
-              email: data.email
+              username: data.userData.username,
+              password: data.userData.password,
+              email: data.userData.email
             });
 
             window.location = '/login';
