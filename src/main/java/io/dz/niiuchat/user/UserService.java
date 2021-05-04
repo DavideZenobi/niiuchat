@@ -4,12 +4,14 @@ import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.authentication.UserRole;
 import io.dz.niiuchat.authentication.UserStatus;
 import io.dz.niiuchat.common.ImageService;
+import io.dz.niiuchat.domain.tables.pojos.Files;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -113,11 +115,18 @@ public class UserService {
         throw new RuntimeException("File is not image");
       }
 
-      BufferedImage image = ImageIO.read(inputStream);
-      BufferedImage resizedImage = imageService.resizeAvatar(image);
-      String path = imageService.saveAvatar(resizedImage, avatarMediaType.getSubtype(), userId);
+      BufferedImage avatar = ImageIO.read(inputStream);
+      BufferedImage resizedAvatar = imageService.resizeAvatar(avatar);
+      String imageName = imageService.saveAvatar(resizedAvatar, avatarMediaType.getSubtype(), userId);
 
-      LOGGER.info("Saved image {}", path);
+      Files file = new Files();
+      file.setMediaType(avatarMediaType.toString());
+      file.setName(imageName);
+      file.setPath(Paths.get("niiu", "avatars", imageName).toString());
+      file.setType("AVATAR");
+      file.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
+
+      LOGGER.info("Saved image {}", file.getPath());
     } catch (IOException e) {
       LOGGER.error("Error processing Avatar image", e);
     }

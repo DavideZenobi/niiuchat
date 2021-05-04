@@ -4,6 +4,7 @@ import static io.dz.niiuchat.domain.tables.Users.USERS;
 import static io.dz.niiuchat.domain.tables.UsersRoles.USERS_ROLES;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import java.io.ObjectInputFilter.Config;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -96,6 +97,21 @@ public class UserRepository {
         .execute();
 
     return user;
+  }
+
+  public void insertFileId(String fileId, Long userId) {
+    insertFileId(null, fileId, userId);
+  }
+
+  public void insertFileId(Configuration configuration, String fileId, Long userId) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    currentContext.update(USERS)
+        .set(USERS.FILE_ID, fileId)
+        .where(USERS.ID.eq(userId))
+        .execute();
   }
 
   public void updatePassword(Long id, String password, LocalDateTime updateDate) {

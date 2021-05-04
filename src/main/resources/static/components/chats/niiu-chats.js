@@ -1,7 +1,9 @@
 (() => {
 
   const template = `
-  
+    <md-field>
+        
+    </md-field>
   `;
 
   Vue.component('niiu-chats', {
@@ -9,7 +11,11 @@
     template: template,
     data: function (){
       return {
-        user: { }
+        chat: {
+          username: '',
+          groupId: '',
+          avatar: ''
+        }
       };
     },
     mounted: async function () {

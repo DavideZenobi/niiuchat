@@ -56,9 +56,17 @@ public class ImageService {
 
     saveImage(image, imageFullPath, format);
 
-    return imageFullPath;
+    return imageName;
   }
+/*
+  public void saveAvatar(BufferedImage image, String format, ImagePaths avatarPaths) throws IOException {
+    if (Files.notExists(AVATARS_ABSOLUTE_PATH)) {
+      Files.createDirectories(AVATARS_ABSOLUTE_PATH);
+    }
 
+    saveImage(image, avatarPaths.getAbsolutePath(), format);
+  }
+*/
   public void saveImage(BufferedImage image, String path, String format) throws IOException {
     File outputFile = new File(path);
     ImageIO.write(image, format, outputFile);
