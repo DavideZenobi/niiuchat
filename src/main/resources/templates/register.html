@@ -20,34 +20,43 @@
 
       <md-card-content>
         <form v-on:submit.prevent="onRegister">
-          <md-field md-clearable>
-            <label for="usernameInput">Username</label>
-            <md-input v-model="username"
+          <md-field :class="usernameClasses">
+            <label>Username</label>
+            <md-input v-model="$v.userData.username.$model"
+                      maxlength="16"
                       id="usernameInput"></md-input>
+            <span class="md-error">{{usernameErrorText}}</span>
           </md-field>
 
-          <md-field md-clearable>
-            <label for="emailInput">Email (You will use the email to login)</label>
-            <md-input v-model="email"
+          <md-field md-clearable :class="emailClasses">
+            <label>Email (You will use the email to login)</label>
+            <md-input v-model="$v.userData.email.$model"
+                      name="email"
                       id="emailInput"></md-input>
+            <span class="md-error">{{emailErrorText}}</span>
           </md-field>
 
-          <md-field>
-            <label for="passwordInput">Password</label>
-            <md-input v-model="password"
+          <md-field :class="passwordClasses">
+            <label>Password</label>
+            <md-input v-model="$v.userData.password.$model"
                       type="password"
+                      maxlength="16"
                       id="passwordInput"></md-input>
+            <span class="md-error">{{passwordErrorText}}</span>
           </md-field>
 
-          <md-field>
-            <label for="passwordRepeatInput">Repeat Password</label>
-            <md-input v-model="passwordRepeat"
+          <md-field :class="repeatPasswordClasses">
+            <label>Repeat Password</label>
+            <md-input v-model="$v.userData.repeatPassword.$model"
                       type="password"
                       id="passwordRepeatInput"></md-input>
+            <span class="md-error">{{repeatPasswordErrorText}}</span>
           </md-field>
 
           <div style="display: flex; align-items: center; justify-content: space-between;">
-            <md-button class="md-raised md-primary btnLogin" type="submit">Register</md-button>
+            <md-button class="md-raised md-primary btnLogin"
+                       type="submit"
+                       :disabled="registerDisabled">Register</md-button>
             <span><a href="/login">Cancel</a></span>
           </div>
         </form>
@@ -59,26 +68,92 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const data = {
-      username: '',
-      password: '',
-      passwordRepeat: '',
-      email: ''
+      userData: {
+        username: '',
+        email: '',
+        password: '',
+        repeatPassword: ''
+      }
     }
 
     new Vue({
       el: '#app',
       data: data,
+      computed: {
+        usernameClasses: function () {
+          return (!this.$v.userData.username.required || !this.$v.userData.username.minLength) && this.$v.userData.username.$dirty ? 'md-invalid' : '';
+        },
+        usernameErrorText: function () {
+          if (!this.$v.userData.username.required) return 'Field is required';
+          else if (!this.$v.userData.username.minLength) return `Username must have at least ${this.$v.userData.username.$params.minLength.min} letters`;
+          else return '';
+        },
+        emailClasses: function () {
+          return (!this.$v.userData.email.required || !this.$v.userData.email.valid) && this.$v.userData.email.$dirty ? 'md-invalid' : '';
+        },
+        emailErrorText: function () {
+          if (!this.$v.userData.email.required) return 'Field is required';
+          else if (!this.$v.userData.email.valid) return 'Must be a valid email';
+          else return '';
+        },
+        passwordClasses: function () {
+          return (!this.$v.userData.password.required || !this.$v.userData.password.minLength) && this.$v.userData.password.$dirty ? 'md-invalid' : '';
+        },
+        passwordErrorText: function () {
+          if (!this.$v.userData.password.required) return 'Field is required';
+          else if (!this.$v.userData.password.minLength) return `Password must have at least ${this.$v.userData.password.$params.minLength.min} letters`;
+          else return '';
+        },
+        repeatPasswordClasses: function () {
+          return (!this.$v.userData.repeatPassword.required || !this.$v.userData.repeatPassword.minLength || !this.$v.userData.repeatPassword.passwordMatch) && this.$v.userData.repeatPassword.$dirty ? 'md-invalid' : '';
+        },
+        repeatPasswordErrorText: function () {
+          if (!this.$v.userData.repeatPassword.required) return 'Field is required';
+          else if (!this.$v.userData.repeatPassword.minLength) return `Password must have at least ${this.$v.userData.repeatPassword.$params.minLength} letters`;
+          else if (!this.$v.userData.repeatPassword.passwordMatch) `Passwords don't match`;
+        },
+        registerDisabled: function () {
+          return this.isPasswordInvalid();
+        }
+      },
+      validations: {
+        userData: {
+          username: {
+            required: validators.required,
+            minLength: validators.minLength(4)
+          },
+          email: {
+            required: validators.required,
+            valid: validators.email
+          },
+          password: {
+            required: validators.required,
+            minLength: validators.minLength(4)
+          },
+          repeatPassword: {
+            required: validators.required,
+            minLength: validators.minLength(4),
+            passwordMatch: function (value) {
+              return value === this.userData.password;
+            }
+          }
+        }
+      },
       methods: {
+        isPasswordInvalid: function () {
+          return this.$v.userData.password.$invalid ||
+              this.$v.userData.repeatPassword.$invalid;
+        },
         onRegister: async function() {
-          if (data.password !== data.passwordRepeat) {
+          if (this.isPasswordInvalid()) {
             return;
           }
 
           try {
             await UserApi.register({
-              username: data.username,
-              password: data.password,
-              email: data.email
+              username: data.userData.username,
+              password: data.userData.password,
+              email: data.userData.email
             });
 
             window.location = '/login';

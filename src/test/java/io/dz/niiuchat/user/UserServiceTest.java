@@ -14,6 +14,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import io.dz.niiuchat.authentication.UserRole;
+import io.dz.niiuchat.common.ImageService;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
@@ -37,6 +38,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 class UserServiceTest {
 
   @Mock
+  private ImageService imageService;
+
+  @Mock
   private UserRepository userRepository;
 
   @Mock
@@ -53,7 +57,7 @@ class UserServiceTest {
     MockConnection connection = new MockConnection(provider);
     DSLContext dsl = DSL.using(connection, SQLDialect.MARIADB);
 
-    userService = new UserService(userRepository, roleRepository, dsl, passwordEncoder);
+    userService = new UserService(imageService, userRepository, roleRepository, dsl, passwordEncoder);
   }
 
   @Test
