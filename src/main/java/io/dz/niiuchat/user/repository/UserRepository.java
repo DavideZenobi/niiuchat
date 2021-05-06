@@ -99,17 +99,18 @@ public class UserRepository {
     return user;
   }
 
-  public void insertFileId(String fileId, Long userId) {
-    insertFileId(null, fileId, userId);
+  public void insertFileId(String fileId, Long userId, LocalDateTime localDateTime) {
+    insertFileId(null, fileId, userId, localDateTime);
   }
 
-  public void insertFileId(Configuration configuration, String fileId, Long userId) {
+  public void insertFileId(Configuration configuration, String fileId, Long userId, LocalDateTime localDateTime) {
     DSLContext currentContext = (configuration != null) ?
         DSL.using(configuration) :
         dslContext;
 
     currentContext.update(USERS)
         .set(USERS.FILE_ID, fileId)
+        .set(USERS.UPDATE_DATE, localDateTime)
         .where(USERS.ID.eq(userId))
         .execute();
   }

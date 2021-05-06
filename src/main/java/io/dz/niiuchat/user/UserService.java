@@ -6,6 +6,7 @@ import io.dz.niiuchat.authentication.UserStatus;
 import io.dz.niiuchat.common.ImageService;
 import io.dz.niiuchat.domain.tables.pojos.Files;
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.storage.FilesRepository;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.awt.image.BufferedImage;
@@ -36,6 +37,7 @@ public class UserService {
   private final ImageService imageService;
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
+  private final FilesRepository filesRepository;
   private final DSLContext dslContext;
   private final PasswordEncoder passwordEncoder;
 
@@ -43,12 +45,14 @@ public class UserService {
       ImageService imageService,
       UserRepository userRepository,
       RoleRepository roleRepository,
+      FilesRepository filesRepository,
       DSLContext dslContext,
       PasswordEncoder passwordEncoder
   ) {
     this.imageService = imageService;
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
+    this.filesRepository = filesRepository;
     this.dslContext = dslContext;
     this.passwordEncoder = passwordEncoder;
   }
@@ -117,14 +121,25 @@ public class UserService {
 
       BufferedImage avatar = ImageIO.read(inputStream);
       BufferedImage resizedAvatar = imageService.resizeAvatar(avatar);
-      String imageName = imageService.saveAvatar(resizedAvatar, avatarMediaType.getSubtype(), userId);
 
       Files file = new Files();
+      file.setId("avatar_" + userId);
       file.setMediaType(avatarMediaType.toString());
-      file.setName(imageName);
-      file.setPath(Paths.get("niiu", "avatars", imageName).toString());
+      file.setName(userId + "." + avatarMediaType.getSubtype());
+      file.setPath(Paths.get("niiu", "avatars", file.getName()).toString());
       file.setType("AVATAR");
       file.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
+
+      dslContext.transaction(configuration -> {
+        filesRepository.getPath(configuration, "avatar_" + userId)
+            .ifPresent(oldAvatar -> imageService.deleteImage(oldAvatar.getPath()));
+
+        filesRepository.save(configuration, file);
+        userRepository.insertFileId(configuration, file.getId(), userId, LocalDateTime.now(ZoneOffset.UTC));
+        imageService.saveAvatar(resizedAvatar, avatarMediaType.getSubtype(), userId);
+      });
+
+
 
       LOGGER.info("Saved image {}", file.getPath());
     } catch (IOException e) {

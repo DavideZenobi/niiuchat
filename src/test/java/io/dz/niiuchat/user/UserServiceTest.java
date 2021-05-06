@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 import io.dz.niiuchat.authentication.UserRole;
 import io.dz.niiuchat.common.ImageService;
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.storage.FilesRepository;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -47,6 +48,9 @@ class UserServiceTest {
   private RoleRepository roleRepository;
 
   @Mock
+  private FilesRepository filesRepository;
+
+  @Mock
   private PasswordEncoder passwordEncoder;
 
   private UserService userService;
@@ -57,7 +61,7 @@ class UserServiceTest {
     MockConnection connection = new MockConnection(provider);
     DSLContext dsl = DSL.using(connection, SQLDialect.MARIADB);
 
-    userService = new UserService(imageService, userRepository, roleRepository, dsl, passwordEncoder);
+    userService = new UserService(imageService, userRepository, roleRepository, filesRepository, dsl, passwordEncoder);
   }
 
   @Test
