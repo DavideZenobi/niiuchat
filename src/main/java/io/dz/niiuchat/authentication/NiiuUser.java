@@ -40,6 +40,18 @@ public class NiiuUser extends User {
     return ((NiiuUser) ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
   }
 
+  public static NiiuUser createDefault(String username, String password, String status, Collection<? extends GrantedAuthority> authorities, Users user) {
+    return new NiiuUser(
+        username,
+        password,
+        UserStatus.ACTIVE.toString().equals(status),
+        true,
+        true,
+        true,
+        authorities,
+        user);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

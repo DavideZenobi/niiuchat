@@ -1,7 +1,5 @@
 package io.dz.niiuchat.user;
 
-import static io.dz.niiuchat.storage.StorageVars.ROOT_ABSOLUTE_PATH;
-
 import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.authentication.UserRole;
 import io.dz.niiuchat.authentication.UserStatus;
@@ -106,13 +104,10 @@ public class UserService {
     String password = updatedUser.getPassword();
     updatedUser.setPassword(null);
 
-    NiiuUser niiuUser = new NiiuUser(
+    NiiuUser niiuUser = NiiuUser.createDefault(
         updatedUser.getUsername(),
         password,
-        UserStatus.ACTIVE.toString().equals(updatedUser.getStatus()),
-        true,
-        true,
-        true,
+        updatedUser.getStatus(),
         roles,
         updatedUser);
 
@@ -140,7 +135,7 @@ public class UserService {
 
       dslContext.transaction(configuration -> {
         // Get old avatar and delete if exists
-        fileRepository.findOne(avatarFileToSave.getId())
+        fileRepository.findOne(configuration, avatarFileToSave.getId())
             .ifPresent(oldAvatar -> storageService.deleteAvatar(oldAvatar.getPath()));
 
         // Update avatar data on storage
@@ -167,10 +162,10 @@ public class UserService {
     }
 
     Files fileRecord = fileOptional.get();
-    File imageFile = ROOT_ABSOLUTE_PATH.resolve(fileRecord.getPath()).toFile();
+    File imageFile = storageService.getFileFromRelativePath(fileRecord.getPath());
 
     if (!imageFile.exists()) {
-      throw new RuntimeException("Image " + imageFile.getAbsolutePath() + " was not found in the storage");
+      throw new MissingImageException(imageFile.getAbsolutePath());
     }
 
     return Optional.of(new AvatarDto(imageFile, fileRecord.getMediaType()));

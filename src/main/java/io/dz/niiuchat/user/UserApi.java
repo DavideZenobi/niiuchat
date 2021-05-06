@@ -69,7 +69,7 @@ public class UserApi {
 
     AvatarDto avatarData = avatarOptional.get();
 
-    var headers = new HttpHeaders();
+    HttpHeaders headers = new HttpHeaders();
     headers.add(HttpHeaders.CONTENT_TYPE, avatarData.getMediaType());
     headers.add(HttpHeaders.CONTENT_LENGTH, String.valueOf(avatarData.getAvatarFile().length()));
 

@@ -54,4 +54,8 @@ public class StorageService {
     return "avatar_" + userId;
   }
 
+  public File getFileFromRelativePath(String filePath) {
+    return ROOT_ABSOLUTE_PATH.resolve(filePath).toFile();
+  }
+
 }

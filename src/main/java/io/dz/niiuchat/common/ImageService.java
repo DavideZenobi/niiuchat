@@ -17,15 +17,19 @@ public class ImageService {
   public static final int AVATAR_DEFAULT_WIDTH = 64;
   public static final int AVATAR_DEFAULT_HEIGHT = 64;
 
-  private final TikaConfig tikaConfig = TikaConfig.getDefaultConfig();
-  private final Set<String> acceptedImages = Set.of("image/jpg", "image/jpeg", "image/png");
+  private static final TikaConfig TIKA_CONFIG = TikaConfig.getDefaultConfig();
+  private static final Set<MediaType> ACCEPTED_IMAGES = Set.of(
+      MediaType.image("jpg"),
+      MediaType.image("jpeg"),
+      MediaType.image("png")
+  );
 
   public boolean isAcceptedImage(MediaType mediaType) {
-    return acceptedImages.contains(mediaType.toString());
+    return ACCEPTED_IMAGES.contains(mediaType);
   }
 
   public MediaType getMediaType(InputStream inputStream) throws IOException {
-    return tikaConfig.getMimeRepository().detect(inputStream, new Metadata());
+    return TIKA_CONFIG.getMimeRepository().detect(inputStream, new Metadata());
   }
 
   public BufferedImage resizeAvatar(Image originalImage) {

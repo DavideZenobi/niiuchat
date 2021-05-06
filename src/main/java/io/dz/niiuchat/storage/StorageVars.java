@@ -5,6 +5,8 @@ import java.nio.file.Paths;
 
 public class StorageVars {
 
+  private StorageVars() { }
+
   public static final Path NIIU_PATH = Paths.get("niiu");
   public static final Path AVATARS_PATH = Paths.get("avatars");
   public static final Path AVATARS_RELATIVE_PATH = NIIU_PATH.resolve(AVATARS_PATH);
