@@ -3,7 +3,7 @@ package io.dz.niiuchat.user;
 import io.dz.niiuchat.authentication.UserStatus;
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.user.dto.RegisterInput;
-import io.dz.niiuchat.user.register.RegisterOutput;
+import io.dz.niiuchat.user.dto.RegisterOutput;
 import javax.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

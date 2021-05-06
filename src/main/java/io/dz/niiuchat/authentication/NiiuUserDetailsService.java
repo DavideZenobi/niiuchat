@@ -34,13 +34,10 @@ public class NiiuUserDetailsService implements UserDetailsService {
     String password = user.getPassword();
     user.setPassword(null);
 
-    return new NiiuUser(
+    return NiiuUser.createDefault(
         user.getUsername(),
         password,
-        UserStatus.ACTIVE.toString().equals(user.getStatus()),
-        true,
-        true,
-        true,
+        user.getStatus(),
         roles,
         user);
   }

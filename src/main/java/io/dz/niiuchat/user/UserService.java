@@ -4,15 +4,23 @@ import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.authentication.UserRole;
 import io.dz.niiuchat.authentication.UserStatus;
 import io.dz.niiuchat.common.ImageService;
+import io.dz.niiuchat.domain.tables.pojos.Files;
 import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.storage.dto.ImagePaths;
+import io.dz.niiuchat.storage.repository.FileRepository;
+import io.dz.niiuchat.storage.service.FileService;
+import io.dz.niiuchat.storage.service.StorageService;
+import io.dz.niiuchat.user.dto.AvatarDto;
 import io.dz.niiuchat.user.repository.RoleRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import javax.imageio.ImageIO;
 import org.apache.tika.mime.MediaType;
@@ -32,21 +40,30 @@ public class UserService {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
   private final ImageService imageService;
+  private final StorageService storageService;
+  private final FileService fileService;
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
+  private final FileRepository fileRepository;
   private final DSLContext dslContext;
   private final PasswordEncoder passwordEncoder;
 
   public UserService(
       ImageService imageService,
+      StorageService storageService,
+      FileService fileService,
       UserRepository userRepository,
       RoleRepository roleRepository,
+      FileRepository fileRepository,
       DSLContext dslContext,
       PasswordEncoder passwordEncoder
   ) {
     this.imageService = imageService;
+    this.storageService = storageService;
+    this.fileService = fileService;
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
+    this.fileRepository = fileRepository;
     this.dslContext = dslContext;
     this.passwordEncoder = passwordEncoder;
   }
@@ -87,13 +104,10 @@ public class UserService {
     String password = updatedUser.getPassword();
     updatedUser.setPassword(null);
 
-    NiiuUser niiuUser = new NiiuUser(
+    NiiuUser niiuUser = NiiuUser.createDefault(
         updatedUser.getUsername(),
         password,
-        UserStatus.ACTIVE.toString().equals(updatedUser.getStatus()),
-        true,
-        true,
-        true,
+        updatedUser.getStatus(),
         roles,
         updatedUser);
 
@@ -109,18 +123,52 @@ public class UserService {
     try {
       MediaType avatarMediaType = imageService.getMediaType(inputStream);
 
-      if (!imageService.isImage(avatarMediaType)) {
+      if (!imageService.isAcceptedImage(avatarMediaType)) {
         throw new RuntimeException("File is not image");
       }
 
-      BufferedImage image = ImageIO.read(inputStream);
-      BufferedImage resizedImage = imageService.resizeAvatar(image);
-      String path = imageService.saveAvatar(resizedImage, avatarMediaType.getSubtype(), userId);
+      BufferedImage avatarImage = ImageIO.read(inputStream);
+      BufferedImage resizedAvatarImage = imageService.resizeAvatar(avatarImage);
+      ImagePaths avatarPaths = storageService.getAvatarPaths(avatarMediaType.getSubtype(), userId);
 
-      LOGGER.info("Saved image {}", path);
+      Files avatarFileToSave = fileService.createAvatar(userId, avatarMediaType.toString(), avatarPaths.getRelativePath());
+
+      dslContext.transaction(configuration -> {
+        // Get old avatar and delete if exists
+        fileRepository.findOne(configuration, avatarFileToSave.getId())
+            .ifPresent(oldAvatar -> storageService.deleteAvatar(oldAvatar.getPath()));
+
+        // Update avatar data on storage
+        fileRepository.save(configuration, avatarFileToSave);
+
+        // Update user with the updated avatar id and update date
+        userRepository.updateUserAvatar(configuration, userId, avatarFileToSave.getId(), LocalDateTime.now(ZoneOffset.UTC));
+
+        // Finally store the new avatar image in the storage
+        storageService.saveAvatar(resizedAvatarImage, avatarMediaType.getSubtype(), avatarPaths);
+
+        LOGGER.info("Saved avatar {}", avatarPaths.getRelativePath());
+      });
     } catch (IOException e) {
       LOGGER.error("Error processing Avatar image", e);
     }
+  }
+
+  public Optional<AvatarDto> findAvatar(long userId) {
+    var fileOptional = fileRepository.findOne(storageService.getAvatarId(userId));
+
+    if (fileOptional.isEmpty()) {
+      return Optional.empty();
+    }
+
+    Files fileRecord = fileOptional.get();
+    File imageFile = storageService.getFileFromRelativePath(fileRecord.getPath());
+
+    if (!imageFile.exists()) {
+      throw new MissingImageException(imageFile.getAbsolutePath());
+    }
+
+    return Optional.of(new AvatarDto(imageFile, fileRecord.getMediaType()));
   }
 
 }

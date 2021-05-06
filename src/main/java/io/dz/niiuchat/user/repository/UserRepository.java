@@ -114,6 +114,22 @@ public class UserRepository {
         .execute();
   }
 
+  public void updateUserAvatar(Long id, String avatarId, LocalDateTime updateDate) {
+    updateUserAvatar(null, id, avatarId, updateDate);
+  }
+
+  public void updateUserAvatar(Configuration configuration, Long id, String avatarId, LocalDateTime updateDate) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    currentContext.update(USERS)
+        .set(USERS.AVATAR_ID, avatarId)
+        .set(USERS.UPDATE_DATE, updateDate)
+        .where(USERS.ID.eq(id))
+        .execute();
+  }
+
   public void addRole(Long userId, String role) {
     addRole(null, userId, role);
   }
