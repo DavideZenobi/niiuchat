@@ -5,7 +5,7 @@ alter table files
 ;
 
 alter table users
-    change column file_id avatar_id varchar(100) comment 'The user avatar image file' after status
+    rename column file_id to avatar_id
 ;
 
 alter table attachments

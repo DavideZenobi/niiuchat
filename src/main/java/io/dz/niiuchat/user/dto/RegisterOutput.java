@@ -1,4 +1,4 @@
-package io.dz.niiuchat.user.register;
+package io.dz.niiuchat.user.dto;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import lombok.Builder;
