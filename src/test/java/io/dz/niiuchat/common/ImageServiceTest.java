@@ -1,5 +1,7 @@
 package io.dz.niiuchat.common;
 
+import static io.dz.niiuchat.Vars.PDF_RESOURCE_PATH;
+import static io.dz.niiuchat.Vars.PNG_RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,9 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class ImageServiceTest {
-
-  private static final String PNG_RESOURCE_PATH = "default_avatar.png";
-  private static final String PDF_RESOURCE_PATH = "dummy.pdf";
 
   private ImageService imageService;
 
