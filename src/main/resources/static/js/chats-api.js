@@ -1,6 +1,6 @@
 (() => {
 
-  class ChatApi {
+  class ChatsApi {
 
     getChatsByUserId() {
       return axios.get('/api/chats/');
@@ -8,6 +8,6 @@
 
   }
 
-  window.ChatApi = new ChatApi();
+  window.ChatsApi = new ChatsApi();
 
 })();

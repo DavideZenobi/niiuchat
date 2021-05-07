@@ -15,12 +15,7 @@
                     @games-library-clicked="() => changeState('gamesLibrary')"
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
-      <md-list>
-        <md-list-item>
-          <md-icon>add</md-icon>
-          <span class="md-list-item-text">Create conversation</span>
-        </md-list-item>
-      </md-list>
+      <niiu-chats></niiu-chats>
     </md-app-drawer>
 
     <md-app-content class="niiu-main-content">
