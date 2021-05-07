@@ -21,7 +21,7 @@ public class ImageService {
 
   private final TikaConfig tikaConfig = TikaConfig.getDefaultConfig();
   private final Set<String> acceptedImages = Set.of("image/jpeg", "image/png");
-  private final Path avatarsDirectory = Paths.get("niiu", "avatars");
+  private final Path avatarsDirectory = Paths.get(System.getProperty("user.home"),"niiu", "avatars");
 
   public boolean isImage(MediaType mediaType) {
     return acceptedImages.contains(mediaType.toString());
@@ -68,7 +68,6 @@ public class ImageService {
   }
 */
   public void saveImage(BufferedImage image, String path, String format) throws IOException {
-    path = System.getProperty("user.home") + "\\" + path;
     File outputFile = new File(path);
     ImageIO.write(image, format, outputFile);
   }

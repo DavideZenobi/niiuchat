@@ -17,14 +17,14 @@
           
           <div class="md-list-item-text">
             <span>{{chat.username}}</span>
-            <p>I'll be in your neighborhood doing errands this week. Do you want to meet?</p>
+            <p>{{chat.groupId}}</p>
           </div>
           
           <md-button class="md-icon-button md-list-action">
             <md-icon class="md-primary">star_border</md-icon>
           </md-button>
           <md-button class="md-icon-button md-list-action">
-            <span class="material-icons ni-icon-danger">delete</span>
+            <md-icon class="ni-icon-danger">delete</md-icon>
           </md-button>
         </md-list-item>
         
