@@ -44,7 +44,7 @@ public class ChatRepository {
   }
 
   public List<GroupOutput> getGroupsByGroupIds(Long userId, List<String> groupIds) {
-    return dslContext.select(CHATS.GROUP_ID, USERS.USERNAME)
+    return dslContext.select(CHATS.GROUP_ID, USERS.ID, USERS.USERNAME)
         .from(CHATS.join(USERS).on(USERS.ID.eq(CHATS.USER_ID)))
         .where(CHATS.GROUP_ID.in(groupIds))
         .andNot(CHATS.USER_ID.eq(userId))

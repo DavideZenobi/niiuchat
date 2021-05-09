@@ -15,7 +15,7 @@
                     @games-library-clicked="() => changeState('gamesLibrary')"
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
-      <niiu-chats></niiu-chats>
+      <niiu-chats style="height: 93%; overflow-y: auto" class="md-scrollbar"></niiu-chats>
     </md-app-drawer>
 
     <md-app-content class="niiu-main-content">

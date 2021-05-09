@@ -12,14 +12,14 @@
       
       <md-list-item v-for="chat in chats">
         <md-avatar class="md-avatar-icon md-primary">
-          <md-icon>home</md-icon>
+          <img :src="getUserAvatar(chat.userId)">
         </md-avatar>
           
         <div class="md-list-item-text">
           <span>{{chat.username}}</span>
           <p>{{chat.groupId}}</p>
         </div>
-          
+        
         <md-button class="md-icon-button md-list-action">
           <md-icon class="md-primary">star_border</md-icon>
         </md-button>
@@ -27,6 +27,7 @@
           <md-icon class="ni-icon-danger">delete</md-icon>
         </md-button>
       </md-list-item>
+      
     </md-list>
   `;
 
@@ -41,6 +42,12 @@
     mounted: async function () {
       const response = await ChatsApi.getChatsByUserId();
       this.chats = response.data;
+      console.log(response.data);
+    },
+    methods: {
+      getUserAvatar: function (userId) {
+        return `/api/users/${userId}/avatar`;
+      }
     }
   });
 
