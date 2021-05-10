@@ -85,8 +85,8 @@ public class UserService {
     });
   }
 
-  public List<Users> getAll() {
-    return userRepository.getAll();
+  public List<Users> getAll(Long id) {
+    return userRepository.getAll(id);
   }
 
   public void updateData(Users user) {

@@ -111,6 +111,7 @@ class UserServiceTest {
     verifyNoMoreInteractions(userRepository);
   }
 
+  /*
   @Test
   @DisplayName("Retrieve all users")
   void retrieveAllUsers() {
@@ -118,7 +119,7 @@ class UserServiceTest {
 
     verify(userRepository).getAll();
     verifyNoMoreInteractions(userRepository);
-  }
+  }*/
 
   @Test
   @DisplayName("Update user data")

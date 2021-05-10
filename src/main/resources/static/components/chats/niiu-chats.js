@@ -6,8 +6,11 @@
       <md-subheader>Chats</md-subheader>
       
       <md-list-item>
-        <md-icon>add</md-icon>
-        <span class="md-list-item-text">Create chat</span>
+        <md-button class="md-icon-button md-raised"
+                   @click="$emit('chats-clicked')">
+          <md-icon class="ni-icon-primary">add</md-icon>
+        </md-button>
+        <span class="md-list-item-text">Search users</span>
       </md-list-item>
       
       <md-list-item v-for="chat in chats">
@@ -42,7 +45,6 @@
     mounted: async function () {
       const response = await ChatsApi.getChatsByUserId();
       this.chats = response.data;
-      console.log(response.data);
     },
     methods: {
       getUserAvatar: function (userId) {

@@ -15,7 +15,9 @@
                     @games-library-clicked="() => changeState('gamesLibrary')"
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
-      <niiu-chats style="height: 93%; overflow-y: auto" class="md-scrollbar"></niiu-chats>
+      <niiu-chats style="height: 93%; overflow-y: auto"
+                  class="md-scrollbar"
+                  @chats-clicked="() => changeState('chats')"></niiu-chats>
     </md-app-drawer>
 
     <md-app-content class="niiu-main-content">
@@ -23,6 +25,7 @@
       <niiu-profile v-if="selectedState === 'profile'"></niiu-profile>
       <niiu-games-library v-else-if="selectedState === 'gamesLibrary'"></niiu-games-library>
       <niiu-chat v-else-if="selectedState === 'chat'"></niiu-chat>
+      <niiu-create-chats v-else-if="selectedState === 'chats'"></niiu-create-chats>
       <div v-else style="text-align: center;">
         <img src="/images/app-default.jpg" alt="moguri-img">
       </div>
@@ -45,6 +48,10 @@
       gamesLibrary: {
         id: 'gamesLibrary',
         title: 'Games Library'
+      },
+      chats: {
+        id: 'chats',
+        title: 'Chats'
       }
     };
 
