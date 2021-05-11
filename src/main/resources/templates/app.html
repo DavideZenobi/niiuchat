@@ -6,7 +6,7 @@
 <div id="app" v-cloak>
   <md-app class="niiu-main-container" md-waterfall md-mode="fixed">
     <md-app-toolbar class="md-primary">
-      <span class="md-title">{{selectedStateTitle}}</span>
+      <span class="md-title">{{selectedStateTitle}}<span v-if="wsConnected" style="color: lightgreen;"> - Connected</span></span>
     </md-app-toolbar>
 
     <md-app-drawer md-permanent="full">
@@ -55,7 +55,8 @@
 
     const data = {
       state: null,
-      window: window
+      window: window,
+      wsConnected: false
     };
 
     new Vue({
@@ -75,6 +76,17 @@
         }
       }
     });
+
+    PubSub.subscribe(NiiuLive.Messages.CONNECTION_ESTABLISHED, (topic, msg) => {
+      console.log(`topic: ${topic} / message: ${JSON.stringify(msg)}`);
+      data.wsConnected = true;
+    });
+
+    PubSub.subscribe(NiiuLive.Messages.USER_CONNECTED, (topic, msg) => {
+      console.log(`topic: ${topic} / message: ${JSON.stringify(msg)}`);
+    });
+
+    NiiuLive.connect();
   }, false);
 </script>
 

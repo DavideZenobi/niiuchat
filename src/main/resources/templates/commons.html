@@ -12,13 +12,14 @@
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="/css/niiu-common.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pubsub-js/1.9.3/pubsub.min.js"></script>
   </head>
 </template>
 
 <template th:fragment="after-imports" th:remove="tag">
   <!-- libraries -->
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
   <script th:if="${#arrays.contains(@environment.getActiveProfiles(), 'production')}"
           src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
   <script th:unless="${#arrays.contains(@environment.getActiveProfiles(), 'production')}"
@@ -26,6 +27,9 @@
   <script src="https://unpkg.com/vue-material"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuelidate@0.7.6/dist/vuelidate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuelidate@0.7.6/dist/validators.min.js"></script>
+
+  <!-- WebSocket -->
+  <script src="/js/live.js"></script>
 
   <!-- functions -->
   <script src="/js/user-api.js"></script>
