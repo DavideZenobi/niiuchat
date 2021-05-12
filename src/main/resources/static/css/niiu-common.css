@@ -46,3 +46,21 @@ i.ni-icon-primary {
 i.ni-icon-danger {
     color: red !important;
 }
+
+.create-chats-container {
+    display: flex;
+    flex-flow: column wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.create-chats-chat {
+    border: solid #448aff 1px;
+    border-radius: 20px;
+}
+
+.create-chats-button {
+    border: solid #448aff 1px;
+    background-color: #448aff;
+    color: white !important;
+}
