@@ -2,6 +2,8 @@ package io.dz.niiuchat.messaging;
 
 import io.dz.niiuchat.domain.tables.pojos.Users;
 import io.dz.niiuchat.domain.tables.pojos.Chats;
+import io.dz.niiuchat.messaging.dto.CreateGroupInput;
+import io.dz.niiuchat.messaging.dto.CreateGroupOutput;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
 import io.dz.niiuchat.messaging.repository.ChatRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
@@ -40,7 +42,7 @@ public class MessagingService {
     return groups;
   }
 
-  public void createGroup(Collection<Long> userIds) {
+  public CreateGroupOutput createGroup(Collection<Long> userIds) {
 
     Chats chats = new Chats();
     chats.setGroupId(UUID.randomUUID().toString());
@@ -54,5 +56,7 @@ public class MessagingService {
       }
 
     });
+
+    return CreateGroupOutput.builder().groupId(chats.getGroupId()).build();
   }
 }

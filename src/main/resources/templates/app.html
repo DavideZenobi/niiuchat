@@ -25,7 +25,7 @@
       <niiu-games-library v-else-if="selectedState === 'gamesLibrary'"></niiu-games-library>
       <niiu-chat v-else-if="selectedState === 'chat'"></niiu-chat>
       <niiu-create-chats v-else-if="selectedState === 'chats'"
-                         @chat-clicked="() => changeState('chat')"></niiu-create-chats>
+                         @chat-clicked="onChatClicked"></niiu-create-chats>
       <div v-else style="text-align: center;">
         <img src="/images/app-default.jpg" alt="moguri-img">
       </div>
@@ -58,7 +58,8 @@
     const data = {
       state: null,
       window: window,
-      wsConnected: false
+      wsConnected: false,
+      currentGroupId: null
     };
 
     new Vue({
@@ -75,6 +76,11 @@
       methods: {
         changeState: function(newState) {
           data.state = states[newState];
+        },
+        onChatClicked: function(groupId) {
+          alert(groupId);
+          data.currentGroupId = groupId;
+          this.changeState('chat');
         }
       }
     });

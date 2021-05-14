@@ -2,6 +2,7 @@ package io.dz.niiuchat.messaging;
 
 import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.messaging.dto.CreateGroupInput;
+import io.dz.niiuchat.messaging.dto.CreateGroupOutput;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
 import java.security.Principal;
 import java.util.List;
@@ -30,14 +31,14 @@ public class ChatApi {
   }
 
   @PostMapping(path = "/chats", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Object> createGroup(
+  public ResponseEntity<CreateGroupOutput> createGroup(
       Principal principal,
       @RequestBody @Valid CreateGroupInput createGroupInput
   ) {
     createGroupInput.getUserIds().add(NiiuUser.from(principal).getUser().getId());
-    messagingService.createGroup(createGroupInput.getUserIds());
+    var createGroupOutput = messagingService.createGroup(createGroupInput.getUserIds());
 
-    return ResponseEntity.ok().build();
+    return ResponseEntity.ok(createGroupOutput);
   }
 
 }

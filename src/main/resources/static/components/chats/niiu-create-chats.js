@@ -10,7 +10,7 @@
           <span class="create-item">{{user.username}}</span>
         </div>
         <md-button class="create-chats-button" 
-                   @click="$emit('chat-clicked')">
+                   @click="createChat(user.id)">
           <span>TALK</span>
         </md-button>
       </md-list-item>
@@ -33,6 +33,16 @@
     methods: {
       getUserAvatar: function (userId) {
         return `/api/users/${userId}/avatar`;
+      },
+      createChat: async function (userId) {
+        const response = await ChatsApi.createChat({
+          userIds: [userId]
+        });
+
+        if (response.status === 200) {
+          this.$emit('chat-clicked', response.data.groupId);
+        }
+
       }
     }
   });
