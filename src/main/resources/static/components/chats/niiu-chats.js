@@ -13,7 +13,7 @@
         <span class="md-list-item-text">Search users</span>
       </md-list-item>
       
-      <md-list-item v-for="chat in chats" @click="$emit('chat-clicked')">
+      <md-list-item v-for="chat in chats" @click="sendGroupId(chat.groupId)">
         <md-avatar class="md-avatar-icon md-primary">
           <img :src="getUserAvatar(chat.userId)">
         </md-avatar>
@@ -49,6 +49,9 @@
     methods: {
       getUserAvatar: function (userId) {
         return `/api/users/${userId}/avatar`;
+      },
+      sendGroupId: function (groupId) {
+        this.$emit('chat-clicked', groupId);
       }
     }
   });

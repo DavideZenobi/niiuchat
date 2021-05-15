@@ -10,8 +10,8 @@
       return axios.post('/api/messaging/chats', data);
     }
 
-    getMessagesByGroupId() {
-      return axios.get('/api/messaging/messages');
+    getMessagesByGroupId(data) {
+      return axios.get('/api/messaging/messages', data);
     }
 
   }

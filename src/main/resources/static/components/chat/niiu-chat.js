@@ -6,7 +6,6 @@
         <p>HOLA</p>
       </md-list-item>
     </md-list>
-    <niiu-chat-input></niiu-chat-input>
   `;
 
   Vue.component('niiu-chat', {
@@ -20,6 +19,7 @@
     },
     mounted: async function () {
       const response = await ChatsApi.getMessagesByGroupId();
+      this.messages = response.data;
     }
   });
 
