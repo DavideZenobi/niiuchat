@@ -9,6 +9,7 @@ import lombok.Data;
 public class GroupOutput {
 
   private String groupId;
+  private Long userId;
   private String username;
 
   public static GroupOutput fromGroup(Object input) {

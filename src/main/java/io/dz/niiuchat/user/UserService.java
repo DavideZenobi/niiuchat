@@ -85,8 +85,8 @@ public class UserService {
     });
   }
 
-  public List<Users> getAll() {
-    return userRepository.getAll();
+  public List<Users> getAll(Long id) {
+    return userRepository.getAll(id);
   }
 
   public void updateData(Users user) {
@@ -104,7 +104,7 @@ public class UserService {
     String password = updatedUser.getPassword();
     updatedUser.setPassword(null);
 
-    NiiuUser niiuUser = NiiuUser.createDefault(
+    var niiuUser = NiiuUser.createDefault(
         updatedUser.getUsername(),
         password,
         updatedUser.getStatus(),
@@ -147,6 +147,9 @@ public class UserService {
         // Finally store the new avatar image in the storage
         storageService.saveAvatar(resizedAvatarImage, avatarMediaType.getSubtype(), avatarPaths);
 
+        ((NiiuUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
+                .getUser().setAvatarId(avatarFileToSave.getId());
+
         LOGGER.info("Saved avatar {}", avatarPaths.getRelativePath());
       });
     } catch (IOException e) {
@@ -162,7 +165,7 @@ public class UserService {
     }
 
     Files fileRecord = fileOptional.get();
-    File imageFile = storageService.getFileFromRelativePath(fileRecord.getPath());
+    var imageFile = storageService.getFileFromRelativePath(fileRecord.getPath());
 
     if (!imageFile.exists()) {
       throw new MissingImageException(imageFile.getAbsolutePath());

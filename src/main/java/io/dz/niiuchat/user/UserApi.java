@@ -40,9 +40,9 @@ public class UserApi {
   }
 
   @GetMapping(path = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<Users> getAll() {
+  public List<Users> getAll(Principal principal) {
 
-    List<Users> result = userService.getAll();
+    List<Users> result = userService.getAll(NiiuUser.from(principal).getUser().getId());
 
     for(Users user : result) {
       user.setPassword(null);

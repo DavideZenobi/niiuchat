@@ -61,14 +61,17 @@ public class UserRepository {
     return user;
   }
 
-  public List<Users> getAll() { return getAll(null); }
+  public List<Users> getAll(Long id) { return getAll(null, id); }
 
-  public List<Users> getAll(Configuration configuration) {
+  public List<Users> getAll(Configuration configuration, Long id) {
     DSLContext currentContext = (configuration != null) ?
         DSL.using(configuration) :
         dslContext;
 
-    return currentContext.select().from(USERS).fetchInto(Users.class);
+    return currentContext.select()
+        .from(USERS)
+        .where(USERS.ID.notEqual(id))
+        .fetchInto(Users.class);
   }
 
   public List<Users> getByIds(List<Long> ids) {

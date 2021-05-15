@@ -13,7 +13,19 @@
 }
 
 .niiu-main-content {
+    height: 100%;
     padding: 0;
+}
+
+.niiu-chats {
+    height: 93%;
+    overflow-y: auto;
+}
+
+/* niiu-chat.js */
+.chat-message-list {
+    height: 96%;
+    overflow-y: auto;
 }
 
 /* niiu-check-animation.js */
@@ -29,7 +41,7 @@
 
 /* commons */
 .main-area-container {
-    height: 100%;
+    height: 96%;
     width: 100%;
 }
 
@@ -45,4 +57,22 @@ i.ni-icon-primary {
 
 i.ni-icon-danger {
     color: red !important;
+}
+
+.create-chats-container {
+    display: flex;
+    flex-flow: column wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.create-chats-chat {
+    border: solid #448aff 1px;
+    border-radius: 20px;
+}
+
+.create-chats-button {
+    border: solid #448aff 1px;
+    background-color: #448aff;
+    color: white !important;
 }

@@ -6,26 +6,31 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @Service
 public class WsSessions {
 
-    private final Map<String, WebSocketSession> sessions = Collections.synchronizedMap(new HashMap<>());
+    private final Map<Long, WebSocketSession> sessions = Collections.synchronizedMap(new HashMap<>());
 
-    public void put(String key, WebSocketSession session) {
+    public Optional<WebSocketSession> get(Long key) {
+        return Optional.ofNullable(sessions.get(key));
+    }
+
+    public void put(Long key, WebSocketSession session) {
         sessions.put(key, session);
     }
 
-    public boolean exists(String key) {
+    public boolean exists(Long key) {
         return sessions.containsKey(key);
     }
 
-    public WebSocketSession remove(String key) {
+    public WebSocketSession remove(Long key) {
         return sessions.remove(key);
     }
 
-    public void forEach(BiConsumer<String, WebSocketSession> action) {
+    public void forEach(BiConsumer<Long, WebSocketSession> action) {
         sessions.forEach(action);
     }
 

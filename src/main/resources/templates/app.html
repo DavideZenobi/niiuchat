@@ -10,24 +10,21 @@
     </md-app-toolbar>
 
     <md-app-drawer md-permanent="full">
-      <niiu-toolbar @chat-clicked="() => changeState('chat')"
-                    @settings-clicked="() => changeState('profile')"
-                    @games-library-clicked="() => changeState('gamesLibrary')"
+      <niiu-toolbar @settings-clicked="() => changeState('profile')"
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
-      <md-list>
-        <md-list-item>
-          <md-icon>add</md-icon>
-          <span class="md-list-item-text">Create conversation</span>
-        </md-list-item>
-      </md-list>
+      <niiu-chats class="niiu-chats md-scrollbar"
+                  @create-clicked="() => changeState('createChat')"
+                  @chat-selected="(groupId) => onChatSelected(groupId)"></niiu-chats>
     </md-app-drawer>
 
     <md-app-content class="niiu-main-content">
       <!-- Contextual content -->
       <niiu-profile v-if="selectedState === 'profile'"></niiu-profile>
-      <niiu-games-library v-else-if="selectedState === 'gamesLibrary'"></niiu-games-library>
-      <niiu-chat v-else-if="selectedState === 'chat'"></niiu-chat>
+      <niiu-chat v-else-if="selectedState === 'chat'"
+                 :group-id="currentGroupId"></niiu-chat>
+      <niiu-create-chats v-else-if="selectedState === 'createChat'"
+                         @chat-clicked="onChatSelected"></niiu-create-chats>
       <div v-else style="text-align: center;">
         <img src="/images/app-default.jpg" alt="moguri-img">
       </div>
@@ -41,22 +38,23 @@
     const states = {
       chat: {
         id: 'chat',
-        title: 'Chats'
+        title: 'Chat'
       },
       profile: {
         id: 'profile',
         title: 'Profile'
       },
-      gamesLibrary: {
-        id: 'gamesLibrary',
-        title: 'Games Library'
+      createChat: {
+        id: 'createChat',
+        title: 'Create Chat'
       }
     };
 
     const data = {
       state: null,
       window: window,
-      wsConnected: false
+      wsConnected: false,
+      currentGroupId: null
     };
 
     new Vue({
@@ -73,6 +71,10 @@
       methods: {
         changeState: function(newState) {
           data.state = states[newState];
+        },
+        onChatSelected: function(groupId) {
+          data.currentGroupId = groupId;
+          this.changeState('chat');
         }
       }
     });

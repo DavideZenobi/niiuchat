@@ -55,8 +55,8 @@
 
           try {
             await UserApi.updateAvatar(formData);
+            this.user.avatarId = Date.now().toLocaleString();
 
-            this.profileImage = fr.result;
             this.showImageUploadedAlert = true;
           } catch (err) {
             alert(err);

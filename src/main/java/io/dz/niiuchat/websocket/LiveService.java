@@ -3,6 +3,7 @@ package io.dz.niiuchat.websocket;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 @Service
@@ -14,19 +15,22 @@ public class LiveService {
         this.wsSessions = wsSessions;
     }
 
-    public boolean sessionExists(String key) {
-        return wsSessions.exists(key);
-    }
+    // Commented for now
+    /*public boolean sessionExistsAndIsAlive(Long key) {
+        return wsSessions.get(key)
+                .map(WebSocketSession::isOpen)
+                .orElse(false);
+    }*/
 
-    public void putSession(String key, WebSocketSession session) {
+    public void putSession(Long key, WebSocketSession session) {
         wsSessions.put(key, session);
     }
 
-    public void removeSession(String key) {
-        wsSessions.remove(key);
+    public Optional<WebSocketSession> removeSession(Long key) {
+        return Optional.ofNullable(wsSessions.remove(key));
     }
 
-    public void forEachSession(BiConsumer<String, WebSocketSession> action) {
+    public void forEachSession(BiConsumer<Long, WebSocketSession> action) {
         wsSessions.forEach(action);
     }
 
