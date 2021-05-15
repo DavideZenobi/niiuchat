@@ -3,6 +3,7 @@ package io.dz.niiuchat.websocket;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dz.niiuchat.authentication.NiiuUser;
 import io.dz.niiuchat.websocket.dto.LiveMessage;
+import io.dz.niiuchat.websocket.dto.LiveMessageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
-import java.security.Principal;
 
 @Service
 public class LiveSocketHandler extends TextWebSocketHandler {
@@ -40,20 +40,23 @@ public class LiveSocketHandler extends TextWebSocketHandler {
         var niiuUser = NiiuUser.from(principal);
         String username = niiuUser.getUser().getUsername();
 
-        if (liveService.sessionExists(niiuUser.getUsername())) {
-            session.close();
-            LOGGER.warn("User {} already connected", username);
-            return;
-        }
+        liveService.removeSession(niiuUser.getUser().getId()).ifPresent(oldSession -> {
+            try {
+                oldSession.close();
+                LOGGER.warn("User {} was already connected. Old session deleted", username);
+            } catch (IOException e) {
+                LOGGER.error("Error closing session for user {}", username, e);
+            }
+        });
 
         LOGGER.info("User {} connected to websocket", username);
 
-        var liveMessage = LiveMessage.createUserConnectedMessage(niiuUser.getUser().getId());
+        var liveMessage = LiveMessageFactory.createUserConnectedMessage(niiuUser.getUser().getId());
         var textMessage = new TextMessage(mapper.writeValueAsBytes(liveMessage));
 
         notifyUserConnected(textMessage);
 
-        liveService.putSession(username, session);
+        liveService.putSession(niiuUser.getUser().getId(), session);
     }
 
     @Override
@@ -71,10 +74,9 @@ public class LiveSocketHandler extends TextWebSocketHandler {
         }
 
         var niiuUser = NiiuUser.from(principal);
-        String username = niiuUser.getUser().getUsername();
 
         session.close();
-        liveService.removeSession(username);
+        liveService.removeSession(niiuUser.getUser().getId());
         LOGGER.info("User {} disconnected", niiuUser.getUser().getUsername());
     }
 
