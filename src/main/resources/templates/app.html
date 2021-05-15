@@ -16,7 +16,8 @@
 
       <niiu-chats style="height: 93%; overflow-y: auto"
                   class="md-scrollbar"
-                  @chats-clicked="() => changeState('chats')"></niiu-chats>
+                  @chats-clicked="() => changeState('chats')"
+                  @chat-clicked="() => changeState('chat')"></niiu-chats>
     </md-app-drawer>
 
     <md-app-content class="niiu-main-content">

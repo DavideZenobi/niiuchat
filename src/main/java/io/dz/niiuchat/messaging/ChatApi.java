@@ -6,6 +6,7 @@ import io.dz.niiuchat.messaging.dto.CreateGroupInput;
 import io.dz.niiuchat.messaging.dto.CreateGroupOutput;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
 import io.dz.niiuchat.messaging.dto.MessageInput;
+import io.dz.niiuchat.messaging.dto.MessageOutput;
 import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
@@ -43,13 +44,19 @@ public class ChatApi {
     return ResponseEntity.ok(createGroupOutput);
   }
 
+  @PostMapping(path = "/message", consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Empty> insertMessage(
       Principal principal,
-      @RequestBody @Valid MessageInput messageInput
+      @RequestBody MessageInput messageInput
   ) {
-
+    messagingService.insertMessageText(NiiuUser.from(principal).getUser().getId(), messageInput);
 
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping(path = "/messages", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<MessageOutput> getMessagesByGroupId() {
+    return messagingService.getMessagesByGroupId("dagadsgasdf");
   }
 
 }

@@ -13,7 +13,7 @@
         <span class="md-list-item-text">Search users</span>
       </md-list-item>
       
-      <md-list-item v-for="chat in chats">
+      <md-list-item v-for="chat in chats" @click="$emit('chat-clicked')">
         <md-avatar class="md-avatar-icon md-primary">
           <img :src="getUserAvatar(chat.userId)">
         </md-avatar>
