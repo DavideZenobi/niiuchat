@@ -31,13 +31,17 @@
       return {
         user: { },
         uploadingImage: false,
-        showImageUploadedAlert: false,
-        profileImage: '/images/default_avatar.png'
+        showImageUploadedAlert: false
       }
     },
     mounted: async function () {
       const response = await UserApi.getCurrentUser();
       this.user = response.data;
+    },
+    computed: {
+      profileImage: function() {
+        return this.user.avatarId ? `/api/users/${this.user.id}/avatar` : '/images/default_avatar.png';
+      }
     },
     methods: {
       onImageChange: function(files) {
