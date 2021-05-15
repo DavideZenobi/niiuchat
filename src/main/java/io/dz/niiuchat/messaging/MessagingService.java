@@ -59,4 +59,12 @@ public class MessagingService {
 
     return CreateGroupOutput.builder().groupId(chats.getGroupId()).build();
   }
+
+  public void insertMessageText() {
+
+  }
+
+  public void insertMessageAttachment() {
+
+  }
 }
