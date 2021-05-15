@@ -9,11 +9,11 @@
   `;
 
   Vue.component('niiu-chat-input', {
-    props: [],
+    props: ['groupId'],
     template: template,
     data: function () {
       return {
-
+        withLabel: ''
       }
     },
   });

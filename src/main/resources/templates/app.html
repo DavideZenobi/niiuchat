@@ -13,8 +13,7 @@
       <niiu-toolbar @settings-clicked="() => changeState('profile')"
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
-      <niiu-chats style="height: 93%; overflow-y: auto"
-                  class="md-scrollbar"
+      <niiu-chats class="niiu-chats md-scrollbar"
                   @create-clicked="() => changeState('createChat')"
                   @chat-selected="(groupId) => onChatSelected(groupId)"></niiu-chats>
     </md-app-drawer>
@@ -22,7 +21,8 @@
     <md-app-content class="niiu-main-content">
       <!-- Contextual content -->
       <niiu-profile v-if="selectedState === 'profile'"></niiu-profile>
-      <niiu-chat v-else-if="selectedState === 'chat'"></niiu-chat>
+      <niiu-chat v-else-if="selectedState === 'chat'"
+                 :group-id="currentGroupId"></niiu-chat>
       <niiu-create-chats v-else-if="selectedState === 'createChat'"
                          @chat-clicked="onChatSelected"></niiu-create-chats>
       <div v-else style="text-align: center;">
@@ -73,7 +73,6 @@
           data.state = states[newState];
         },
         onChatSelected: function(groupId) {
-          alert(groupId);
           data.currentGroupId = groupId;
           this.changeState('chat');
         }
