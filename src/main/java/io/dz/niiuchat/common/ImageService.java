@@ -1,15 +1,17 @@
 package io.dz.niiuchat.common;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Set;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.mime.MediaType;
 import org.springframework.stereotype.Service;
+
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Set;
 
 @Service
 public class ImageService {
@@ -19,9 +21,9 @@ public class ImageService {
 
   private static final TikaConfig TIKA_CONFIG = TikaConfig.getDefaultConfig();
   private static final Set<MediaType> ACCEPTED_IMAGES = Set.of(
-      MediaType.image("jpg"),
-      MediaType.image("jpeg"),
-      MediaType.image("png")
+          MediaType.image("jpg"),
+          MediaType.image("jpeg"),
+          MediaType.image("png")
   );
 
   public boolean isAcceptedImage(MediaType mediaType) {
@@ -40,6 +42,7 @@ public class ImageService {
     BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
     Graphics2D graphics2D = resizedImage.createGraphics();
+    graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
     graphics2D.drawImage(originalImage, 0, 0, width, height, null);
     graphics2D.dispose();
 
