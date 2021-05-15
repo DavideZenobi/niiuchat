@@ -7,13 +7,13 @@
       
       <md-list-item>
         <md-button class="md-icon-button md-raised"
-                   @click="$emit('chats-clicked')">
+                   @click="$emit('create-clicked')">
           <md-icon class="ni-icon-primary">add</md-icon>
         </md-button>
-        <span class="md-list-item-text">Search users</span>
+        <span class="md-list-item-text">New conversation</span>
       </md-list-item>
       
-      <md-list-item v-for="chat in chats" @click="sendGroupId(chat.groupId)">
+      <md-list-item v-for="chat in chats" @click="onChatSelect(chat.groupId)">
         <md-avatar class="md-avatar-icon md-primary">
           <img :src="getUserAvatar(chat.userId)">
         </md-avatar>
@@ -50,8 +50,8 @@
       getUserAvatar: function (userId) {
         return `/api/users/${userId}/avatar`;
       },
-      sendGroupId: function (groupId) {
-        this.$emit('chat-clicked', groupId);
+      onChatSelect: function (groupId) {
+        this.$emit('chat-selected', groupId);
       }
     }
   });

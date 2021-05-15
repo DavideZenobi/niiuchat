@@ -10,6 +10,7 @@ import io.dz.niiuchat.messaging.dto.MessageOutput;
 import io.dz.niiuchat.messaging.repository.ChatRepository;
 import io.dz.niiuchat.messaging.repository.MessageRepository;
 import io.dz.niiuchat.user.repository.UserRepository;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -71,7 +72,7 @@ public class MessagingService {
     message.setUserId(userId);
     message.setHasAttachment((byte) (messageInput.getHasAttachment() ? 1 : 0));
     message.setMessage(messageInput.getMessage());
-    //message.setTimestamp();
+    message.setTimestamp(Instant.now().toEpochMilli());
     message.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
   }
 

@@ -11,22 +11,20 @@
 
     <md-app-drawer md-permanent="full">
       <niiu-toolbar @settings-clicked="() => changeState('profile')"
-                    @games-library-clicked="() => changeState('gamesLibrary')"
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
       <niiu-chats style="height: 93%; overflow-y: auto"
                   class="md-scrollbar"
-                  @chats-clicked="() => changeState('chats')"
-                  @chat-clicked="() => changeState('chat')"></niiu-chats>
+                  @create-clicked="() => changeState('createChat')"
+                  @chat-selected="(groupId) => onChatSelected(groupId)"></niiu-chats>
     </md-app-drawer>
 
     <md-app-content class="niiu-main-content">
       <!-- Contextual content -->
       <niiu-profile v-if="selectedState === 'profile'"></niiu-profile>
-      <niiu-games-library v-else-if="selectedState === 'gamesLibrary'"></niiu-games-library>
       <niiu-chat v-else-if="selectedState === 'chat'"></niiu-chat>
-      <niiu-create-chats v-else-if="selectedState === 'chats'"
-                         @chat-clicked="onChatClicked"></niiu-create-chats>
+      <niiu-create-chats v-else-if="selectedState === 'createChat'"
+                         @chat-clicked="onChatSelected"></niiu-create-chats>
       <div v-else style="text-align: center;">
         <img src="/images/app-default.jpg" alt="moguri-img">
       </div>
@@ -46,13 +44,9 @@
         id: 'profile',
         title: 'Profile'
       },
-      gamesLibrary: {
-        id: 'gamesLibrary',
-        title: 'Games Library'
-      },
-      chats: {
-        id: 'chats',
-        title: 'Chats'
+      createChat: {
+        id: 'createChat',
+        title: 'Create Chat'
       }
     };
 
@@ -78,7 +72,7 @@
         changeState: function(newState) {
           data.state = states[newState];
         },
-        onChatClicked: function(groupId) {
+        onChatSelected: function(groupId) {
           alert(groupId);
           data.currentGroupId = groupId;
           this.changeState('chat');
