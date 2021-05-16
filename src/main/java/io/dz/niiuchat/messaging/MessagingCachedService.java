@@ -17,7 +17,7 @@ public class MessagingCachedService {
         this.chatRepository = chatRepository;
     }
 
-    @Cacheable(cacheNames = CacheConfiguration.USERS_BY_GROUP, unless = "#result.size() == 0")
+    @Cacheable(cacheNames = CacheConfiguration.USERS_BY_GROUP, unless = "#result.isEmpty()")
     public Set<Long> getUserIdsForGroup(String groupId) {
         return new HashSet<>(chatRepository.getUserIdsByGroupId(groupId));
     }

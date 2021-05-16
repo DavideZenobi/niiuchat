@@ -75,6 +75,8 @@ public class MessagingService {
     message.setTimestamp(Instant.now().toEpochMilli());
     message.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
 
+    // TODO Implement
+
     // Send message to websocket
     Set<Long> userIdsSet = new HashSet<>(messagingCachedService.getUserIdsForGroup(messageInput.getGroupId()));
     userIdsSet.remove(userId); // Remove self user from the notification
