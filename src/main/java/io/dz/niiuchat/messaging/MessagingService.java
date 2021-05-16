@@ -19,6 +19,7 @@ import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -67,13 +68,15 @@ public class MessagingService {
   }
 
   public void insertMessageText(Long userId, MessageInput messageInput) {
+    var now = Instant.now();
+
     var message = new Messages();
     message.setGroupId(messageInput.getGroupId());
     message.setUserId(userId);
     message.setHasAttachment(messageInput.hasAttachmentAsByte());
     message.setMessage(messageInput.getMessage());
-    message.setTimestamp(Instant.now().toEpochMilli());
-    message.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
+    message.setTimestamp(now.toEpochMilli());
+    message.setCreateDate(LocalDateTime.from(now));
 
     // TODO Implement
 
