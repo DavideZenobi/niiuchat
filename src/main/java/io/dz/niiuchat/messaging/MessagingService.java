@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -75,7 +76,7 @@ public class MessagingService {
     message.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
 
     // Send message to websocket
-    Set<Long> userIdsSet = messagingCachedService.getUserIdsForGroup(messageInput.getGroupId());
+    Set<Long> userIdsSet = new HashSet<>(messagingCachedService.getUserIdsForGroup(messageInput.getGroupId()));
     userIdsSet.remove(userId); // Remove self user from the notification
 
     var liveMessage = LiveMessageFactory.createMessageReceivedMessage(userId, messageInput.getGroupId(), messageInput.getMessage());
