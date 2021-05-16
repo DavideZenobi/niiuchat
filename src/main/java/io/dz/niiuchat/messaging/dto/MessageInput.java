@@ -9,6 +9,8 @@ public class MessageInput {
   private String message;
   private Boolean hasAttachment;
 
-
+  public byte hasAttachmentAsByte() {
+    return (byte) (Boolean.TRUE.equals(hasAttachment) ? 1 : 0);
+  }
 
 }

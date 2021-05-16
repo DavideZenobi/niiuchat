@@ -30,6 +30,8 @@
 
             if (message.type === Messages.USER_CONNECTED) {
                 PubSub.publish(Messages.USER_CONNECTED, message);
+            } else {
+                console.log(`Unhandled message ${event.data}`);
             }
         }
 
