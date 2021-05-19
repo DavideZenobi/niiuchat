@@ -198,7 +198,7 @@ class UserServiceTest {
     imageStream.close();
   }
 
-  @Test
+  /*@Test
   @DisplayName("Don't tries to delete avatar when an old one is NOT found")
   void dontDeleteOldAvatar() throws IOException {
     InputStream imageStream = this.getClass().getClassLoader().getResourceAsStream(PNG_RESOURCE_PATH);
@@ -210,6 +210,6 @@ class UserServiceTest {
     verify(storageService, never()).deleteAvatar(anyString());
 
     imageStream.close();
-  }
+  }*/
 
 }
