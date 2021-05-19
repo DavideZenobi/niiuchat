@@ -1,11 +1,11 @@
 package io.dz.niiuchat.messaging;
 
+import io.dz.niiuchat.common.PageInfo;
 import io.dz.niiuchat.domain.tables.pojos.Chats;
 import io.dz.niiuchat.domain.tables.pojos.Messages;
 import io.dz.niiuchat.messaging.dto.CreateGroupOutput;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
-import io.dz.niiuchat.messaging.dto.MessageInput;
-import io.dz.niiuchat.messaging.dto.MessageOutput;
+import io.dz.niiuchat.messaging.dto.CreateMessageInput;
 import io.dz.niiuchat.messaging.repository.ChatRepository;
 import io.dz.niiuchat.messaging.repository.MessageRepository;
 import io.dz.niiuchat.websocket.LiveService;
@@ -19,7 +19,6 @@ import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -67,15 +66,15 @@ public class MessagingService {
     return CreateGroupOutput.builder().groupId(chats.getGroupId()).build();
   }
 
-  public Messages insertMessageText(Long userId, MessageInput messageInput) {
+  public Messages insertMessageText(Long userId, CreateMessageInput createMessageInput) {
     var now = Instant.now();
 
     var message = new Messages();
     message.setId(UUID.randomUUID().toString());
-    message.setGroupId(messageInput.getGroupId());
+    message.setGroupId(createMessageInput.getGroupId());
     message.setUserId(userId);
-    message.setHasAttachment(messageInput.hasAttachmentAsByte());
-    message.setMessage(messageInput.getMessage());
+    message.setHasAttachment(createMessageInput.hasAttachmentAsByte());
+    message.setMessage(createMessageInput.getMessage());
     message.setTimestamp(now.toEpochMilli());
     message.setCreateDate(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
 
@@ -84,10 +83,10 @@ public class MessagingService {
     messageRepository.insertMessage(message);
 
     // Send message to websocket
-    Set<Long> userIdsSet = new HashSet<>(messagingCachedService.getUserIdsForGroup(messageInput.getGroupId()));
+    Set<Long> userIdsSet = new HashSet<>(messagingCachedService.getUserIdsForGroup(createMessageInput.getGroupId()));
     userIdsSet.remove(userId); // Remove self user from the notification
 
-    var liveMessage = LiveMessageFactory.createMessageReceivedMessage(userId, messageInput.getGroupId(), messageInput.getMessage());
+    var liveMessage = LiveMessageFactory.createMessageReceivedMessage(userId, createMessageInput.getGroupId(), createMessageInput.getMessage());
     liveService.sendMessage(userIdsSet, liveMessage);
 
     return message;
@@ -97,7 +96,14 @@ public class MessagingService {
     // To Implement
   }
 
-  public List<MessageOutput> getMessagesByGroupId(String groupId) {
-    return messageRepository.getMessagesByGroupId(groupId);
+  public List<Messages> getMessagesByGroupId(Long userId, String groupId, PageInfo pageInfo) {
+    Set<Long> userIdsInGroup = messagingCachedService.getUserIdsForGroup(groupId);
+
+    if (!userIdsInGroup.contains(userId)) {
+      throw new RuntimeException("User " + userId + " does not belongs to selected group " + groupId);
+    }
+
+    return messageRepository.findAllByGroupId(groupId, pageInfo);
   }
+
 }

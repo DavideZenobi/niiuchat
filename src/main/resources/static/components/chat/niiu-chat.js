@@ -4,14 +4,9 @@
         <div class="main-area-container">
             <md-content class="chat-message-list md-scrollbar">
                 <div style="display: flex; flex-direction: column;">
-                    <div :style="getParentStyle(0, 0)">
-                        <div :style="getItemStyle(0, 0)">
-                            <span>HOLA {{groupId}}</span>
-                        </div>
-                    </div>
-                    <div v-for="(message, index) in messages" :key="index"
-                         :style="getParentStyle(message, index)">
-                        <div :style="getItemStyle(message, index)">
+                    <div v-for="message in messages" :key="message.id"
+                         :style="getParentStyle(message)">
+                        <div :style="getItemStyle(message)">
                             <span>{{message.message}}</span>
                         </div>
                     </div>
@@ -31,19 +26,26 @@
             }
         },
         mounted: async function () {
-            const response = await ChatsApi.getMessagesByGroupId(this.groupId);
-            this.messages = response.data;
-            const user = await UserApi.getCurrentUser();
-            this.currentUser = user.data;
+            const responses = await Promise.all([
+                ChatsApi.getMessagesByGroupId({
+                    groupId: this.groupId,
+                    limit: 20,
+                    offset: 0
+                }),
+                UserApi.getCurrentUser()
+            ]);
+
+            this.messages = responses[0].data;
+            this.currentUser = responses[1].data;
         },
         methods: {
-            getParentStyle: function (item, index) {
+            getParentStyle: function (message) {
                 return {
                     display: 'flex',
-                    'flex-direction': item.userId === this.currentUser.id ? 'row-reverse' : 'row'
+                    'flex-direction': message.userId === this.currentUser.id ? 'row-reverse' : 'row'
                 };
             },
-            getItemStyle: function (item, index) {
+            getItemStyle: function (message) {
                 return {
                     border: 'solid 1px #000000',
                     'border-radius': '4px',

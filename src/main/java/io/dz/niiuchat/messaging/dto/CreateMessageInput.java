@@ -3,7 +3,7 @@ package io.dz.niiuchat.messaging.dto;
 import lombok.Data;
 
 @Data
-public class MessageInput {
+public class CreateMessageInput {
 
   private String groupId;
   private String message;
