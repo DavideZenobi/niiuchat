@@ -13,7 +13,9 @@
         <span class="md-list-item-text">New conversation</span>
       </md-list-item>
       
-      <md-list-item v-for="chat in chats" @click="onChatSelect(chat.groupId)">
+      <md-list-item v-for="chat in chats"
+                    @click="onChatSelect(chat.groupId)"
+                    :style="getChatItemStyle(chat)">
         <md-avatar class="md-avatar-icon md-primary">
           <img :src="getUserAvatar(chat.userId)">
         </md-avatar>
@@ -23,19 +25,19 @@
           <p>{{chat.groupId}}</p>
         </div>
         
-        <md-button class="md-icon-button md-list-action">
+        <!--<md-button class="md-icon-button md-list-action">
           <md-icon class="md-primary">star_border</md-icon>
         </md-button>
         <md-button class="md-icon-button md-list-action">
           <md-icon class="ni-icon-danger">delete</md-icon>
-        </md-button>
+        </md-button>-->
       </md-list-item>
       
     </md-list>
   `;
 
   Vue.component('niiu-chats', {
-    props: [],
+    props: ['selectedGroup'],
     template: template,
     data: function (){
       return {
@@ -52,6 +54,15 @@
       },
       onChatSelect: function (groupId) {
         this.$emit('chat-selected', groupId);
+      },
+      getChatItemStyle: function (chat) {
+        const style = {};
+
+        if (chat.groupId === this.selectedGroup) {
+          style.background = '#ccc';
+        }
+
+        return style;
       }
     }
   });

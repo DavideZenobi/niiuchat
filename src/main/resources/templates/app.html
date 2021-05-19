@@ -14,6 +14,7 @@
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
       <niiu-chats class="niiu-chats md-scrollbar"
+                  :selected-group="currentGroupId"
                   @create-clicked="() => changeState('createChat')"
                   @chat-selected="(groupId) => onChatSelected(groupId)"></niiu-chats>
     </md-app-drawer>
