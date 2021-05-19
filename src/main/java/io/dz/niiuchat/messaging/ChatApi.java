@@ -2,6 +2,7 @@ package io.dz.niiuchat.messaging;
 
 import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 import io.dz.niiuchat.authentication.NiiuUser;
+import io.dz.niiuchat.domain.tables.pojos.Messages;
 import io.dz.niiuchat.messaging.dto.CreateGroupInput;
 import io.dz.niiuchat.messaging.dto.CreateGroupOutput;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
@@ -45,13 +46,16 @@ public class ChatApi {
   }
 
   @PostMapping(path = "/message", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Empty> insertMessage(
+  public Messages insertMessage(
       Principal principal,
       @RequestBody MessageInput messageInput
   ) {
-    messagingService.insertMessageText(NiiuUser.from(principal).getUser().getId(), messageInput);
+    if (messageInput.getHasAttachment()) {
 
-    return ResponseEntity.ok().build();
+    } else {
+      return messagingService.insertMessageText(NiiuUser.from(principal).getUser().getId(), messageInput);
+    }
+    return messagingService.insertMessageText(NiiuUser.from(principal).getUser().getId(), messageInput);
   }
 
   @GetMapping(path = "/messages", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -67,18 +67,21 @@ public class MessagingService {
     return CreateGroupOutput.builder().groupId(chats.getGroupId()).build();
   }
 
-  public void insertMessageText(Long userId, MessageInput messageInput) {
+  public Messages insertMessageText(Long userId, MessageInput messageInput) {
     var now = Instant.now();
 
     var message = new Messages();
+    message.setId(UUID.randomUUID().toString());
     message.setGroupId(messageInput.getGroupId());
     message.setUserId(userId);
     message.setHasAttachment(messageInput.hasAttachmentAsByte());
     message.setMessage(messageInput.getMessage());
     message.setTimestamp(now.toEpochMilli());
-    message.setCreateDate(LocalDateTime.from(now));
+    message.setCreateDate(LocalDateTime.ofInstant(now, ZoneOffset.UTC));
 
     // TODO Implement
+
+    messageRepository.insertMessage(message);
 
     // Send message to websocket
     Set<Long> userIdsSet = new HashSet<>(messagingCachedService.getUserIdsForGroup(messageInput.getGroupId()));
@@ -86,6 +89,8 @@ public class MessagingService {
 
     var liveMessage = LiveMessageFactory.createMessageReceivedMessage(userId, messageInput.getGroupId(), messageInput.getMessage());
     liveService.sendMessage(userIdsSet, liveMessage);
+
+    return message;
   }
 
   public void insertMessageAttachment(Long userId) {

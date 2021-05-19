@@ -12,7 +12,7 @@
                     <div v-for="(message, index) in messages" :key="index"
                          :style="getParentStyle(message, index)">
                         <div :style="getItemStyle(message, index)">
-                            <span>{{message}}</span>
+                            <span>{{message.message}}</span>
                         </div>
                     </div>
                 </div>
@@ -26,67 +26,21 @@
         template: template,
         data: function () {
             return {
-                messages: [
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef',
-                    'abcdefewfwefwef'
-                ]
+                messages: [],
+                currentUser: {}
             }
         },
         mounted: async function () {
-            const response = await ChatsApi.getMessagesByGroupId();
-            // this.messages = response.data;
+            const response = await ChatsApi.getMessagesByGroupId(this.groupId);
+            this.messages = response.data;
+            const user = await UserApi.getCurrentUser();
+            this.currentUser = user.data;
         },
         methods: {
             getParentStyle: function (item, index) {
                 return {
                     display: 'flex',
-                    'flex-direction': index % 2 === 0 ? 'row' : 'row-reverse'
+                    'flex-direction': item.userId === this.currentUser.id ? 'row-reverse' : 'row'
                 };
             },
             getItemStyle: function (item, index) {

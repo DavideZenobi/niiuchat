@@ -21,16 +21,16 @@ public class MessageRepository {
     this.dslContext = dslContext;
   }
 
-  public void insertMessage(Messages message) {
-
-  }
-
   public List<MessageOutput> getMessagesByGroupId(String groupId) {
     return dslContext.select()
         .from(MESSAGES)
         .where(MESSAGES.GROUP_ID.eq(groupId))
         .orderBy(MESSAGES.CREATE_DATE.asc())
         .fetchInto(MessageOutput.class);
+  }
+
+  public void insertMessage(Messages message) {
+    insertMessage(null, message);
   }
 
   public void insertMessage(Configuration configuration, Messages message) {
@@ -40,6 +40,7 @@ public class MessageRepository {
 
     currentContext.insertInto(
         MESSAGES,
+        MESSAGES.ID,
         MESSAGES.GROUP_ID,
         MESSAGES.USER_ID,
         MESSAGES.HAS_ATTACHMENT,
@@ -47,6 +48,7 @@ public class MessageRepository {
         MESSAGES.TIMESTAMP,
         MESSAGES.CREATE_DATE
     ).values(
+        message.getId(),
         message.getGroupId(),
         message.getUserId(),
         message.getHasAttachment(),
