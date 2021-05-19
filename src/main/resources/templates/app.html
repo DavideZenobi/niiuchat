@@ -43,11 +43,17 @@
       },
       profile: {
         id: 'profile',
-        title: 'Profile'
+        title: 'Profile',
+        init: function (data) {
+          data.currentGroupId = null;
+        }
       },
       createChat: {
         id: 'createChat',
-        title: 'Create Chat'
+        title: 'Create Chat',
+        init: function (data) {
+          data.currentGroupId = null;
+        }
       }
     };
 
@@ -72,6 +78,11 @@
       methods: {
         changeState: function(newState) {
           data.state = states[newState];
+
+          // Call .init(...) function if present in the state
+          if (typeof data.state.init === 'function') {
+            data.state.init(data);
+          }
         },
         onChatSelected: function(groupId) {
           data.currentGroupId = groupId;
