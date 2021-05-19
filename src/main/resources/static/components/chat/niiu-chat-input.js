@@ -57,7 +57,9 @@
           hasAttachment: false
         };
         const response = await ChatsApi.sendMessage(data);
+        this.$emit('on-send-message', response.data);
         this.message = '';
+
 
       }
     }

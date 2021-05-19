@@ -12,7 +12,7 @@
                     </div>
                 </div>
             </md-content>
-          <niiu-chat-input :group-id="groupId"></niiu-chat-input>
+          <niiu-chat-input :group-id="groupId" @on-send-message="(message) => messages.push(message)"></niiu-chat-input>
         </div>
     `;
 
