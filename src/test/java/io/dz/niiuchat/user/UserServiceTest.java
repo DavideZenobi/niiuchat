@@ -1,5 +1,42 @@
 package io.dz.niiuchat.user;
 
+import io.dz.niiuchat.authentication.NiiuUser;
+import io.dz.niiuchat.authentication.UserRole;
+import io.dz.niiuchat.common.ImageService;
+import io.dz.niiuchat.domain.tables.pojos.Files;
+import io.dz.niiuchat.domain.tables.pojos.Users;
+import io.dz.niiuchat.storage.dto.ImagePaths;
+import io.dz.niiuchat.storage.repository.FileRepository;
+import io.dz.niiuchat.storage.service.FileService;
+import io.dz.niiuchat.storage.service.StorageService;
+import io.dz.niiuchat.user.repository.RoleRepository;
+import io.dz.niiuchat.user.repository.UserRepository;
+import org.apache.tika.mime.MediaType;
+import org.jooq.Configuration;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.impl.DSL;
+import org.jooq.tools.jdbc.MockConnection;
+import org.jooq.tools.jdbc.MockDataProvider;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Optional;
+
 import static io.dz.niiuchat.Vars.PNG_RESOURCE_PATH;
 import static io.dz.niiuchat.user.UserTestUtil.USER_EMAIL;
 import static io.dz.niiuchat.user.UserTestUtil.USER_ENCRYPTED_PASSWORD;
@@ -17,36 +54,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-
-import io.dz.niiuchat.authentication.UserRole;
-import io.dz.niiuchat.common.ImageService;
-import io.dz.niiuchat.domain.tables.pojos.Files;
-import io.dz.niiuchat.domain.tables.pojos.Users;
-import io.dz.niiuchat.storage.dto.ImagePaths;
-import io.dz.niiuchat.storage.repository.FileRepository;
-import io.dz.niiuchat.storage.service.FileService;
-import io.dz.niiuchat.storage.service.StorageService;
-import io.dz.niiuchat.user.repository.RoleRepository;
-import io.dz.niiuchat.user.repository.UserRepository;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import org.apache.tika.mime.MediaType;
-import org.jooq.Configuration;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
-import org.jooq.tools.jdbc.MockConnection;
-import org.jooq.tools.jdbc.MockDataProvider;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -76,6 +83,8 @@ class UserServiceTest {
 
   @BeforeEach
   void init() throws IOException {
+    setAuthentication();
+
     Files dummyAvatar = new Files();
     dummyAvatar.setId("mockId");
     dummyAvatar.setPath("mock/path");
@@ -94,12 +103,18 @@ class UserServiceTest {
     userService = new UserService(imageService, storageService, fileService, userRepository, roleRepository, fileRepository, dsl, passwordEncoder);
   }
 
+  private void setAuthentication() {
+    var niiuUser = NiiuUser.createDefault("username", "password", "enabled", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")), new Users());
+    Authentication authentication = new UsernamePasswordAuthenticationToken(niiuUser, "password", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+  }
+
   @Test
   @DisplayName("Create a user and its roles")
   void createUserAndRoles() {
     when(passwordEncoder.encode(anyString())).thenReturn(USER_ENCRYPTED_PASSWORD);
     when(userRepository.create(any(Configuration.class), any(Users.class))).thenReturn(
-        dummyUser(false));
+            dummyUser(false));
 
     userService.createUser(dummyUser());
 
@@ -110,16 +125,6 @@ class UserServiceTest {
     verify(userRepository).addRole(any(Configuration.class), eq(USER_ID), eq(UserRole.ROLE_USER.toString()));
     verifyNoMoreInteractions(userRepository);
   }
-
-  /*
-  @Test
-  @DisplayName("Retrieve all users")
-  void retrieveAllUsers() {
-    userService.getAll();
-
-    verify(userRepository).getAll();
-    verifyNoMoreInteractions(userRepository);
-  }*/
 
   @Test
   @DisplayName("Update user data")
@@ -149,19 +154,6 @@ class UserServiceTest {
     verify(userRepository).updatePassword(eq(USER_ID), eq(USER_ENCRYPTED_PASSWORD), any(LocalDateTime.class));
     verifyNoMoreInteractions(userRepository);
   }
-
-  /*@Test
-  @DisplayName("Checks that image is accepted when upserting the avatar")
-  void upsertAvatarChecksAcceptedImage() throws IOException {
-    InputStream imageStream = this.getClass().getClassLoader().getResourceAsStream(PNG_RESOURCE_PATH);
-    assert imageStream != null;
-
-    userService.upsertAvatar(any(InputStream.class), 1L);
-
-    verify(imageService).isAcceptedImage(MediaType.image("png"));
-
-    imageStream.close();
-  }*/
 
   @Test
   @DisplayName("Create a new avatar and updates the user")
@@ -198,7 +190,7 @@ class UserServiceTest {
     imageStream.close();
   }
 
-  /*@Test
+  @Test
   @DisplayName("Don't tries to delete avatar when an old one is NOT found")
   void dontDeleteOldAvatar() throws IOException {
     InputStream imageStream = this.getClass().getClassLoader().getResourceAsStream(PNG_RESOURCE_PATH);
@@ -210,6 +202,6 @@ class UserServiceTest {
     verify(storageService, never()).deleteAvatar(anyString());
 
     imageStream.close();
-  }*/
+  }
 
 }
