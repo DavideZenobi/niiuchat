@@ -4,7 +4,8 @@
         CONNECTION_ESTABLISHED: 'CONNECTION_ESTABLISHED',
         CONNECTION_CLOSED: 'CONNECTION_CLOSED',
         MESSAGE_RECEIVED: 'MESSAGE_RECEIVED',
-        USER_CONNECTED: 'USER_CONNECTED'
+        USER_CONNECTED: 'USER_CONNECTED',
+        GROUP_CREATED: 'GROUP_CREATED'
     };
 
     class NiiuLive {
@@ -18,26 +19,26 @@
         }
 
         onOpen(event) {
-            PubSub.publish(Messages.CONNECTION_ESTABLISHED, true);
+            PubSub.publish(NiiuEvents.CONNECTION_ESTABLISHED, true);
         }
 
         onClose(event) {
-            PubSub.publish(Messages.CONNECTION_CLOSED, true)
+            PubSub.publish(NiiuEvents.CONNECTION_CLOSED, true)
         }
 
         onMessage(event) {
             const message = JSON.parse(event.data);
 
             if (message.type === Messages.USER_CONNECTED) {
-                PubSub.publish(Messages.USER_CONNECTED, message);
+                PubSub.publish(NiiuEvents.USER_CONNECTED, message);
+            } else if (message.type === Messages.GROUP_CREATED) {
+                PubSub.publish(NiiuEvents.GROUP_CREATED, message.content.groupId);
             } else {
                 console.log(`Unhandled message ${event.data}`);
             }
         }
 
     }
-
-    NiiuLive.prototype.Messages = Messages;
 
     window.NiiuLive = new NiiuLive();
 

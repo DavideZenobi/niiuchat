@@ -1,4 +1,7 @@
 server:
+  servlet:
+    session:
+      persistent: true
   error:
     include-binding-errors: always
 

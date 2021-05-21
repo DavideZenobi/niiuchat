@@ -41,6 +41,7 @@
 
         if (response.status === 200) {
           this.$emit('chat-clicked', response.data.groupId);
+          PubSub.publish(NiiuEvents.GROUP_CREATED, response.data.groupId);
         }
 
       }

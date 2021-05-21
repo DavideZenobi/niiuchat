@@ -1,8 +1,8 @@
 package io.dz.niiuchat.websocket.dto;
 
+import io.dz.niiuchat.websocket.dto.content.GroupCreatedMessage;
 import io.dz.niiuchat.websocket.dto.content.MessageReceivedMessage;
 import io.dz.niiuchat.websocket.dto.content.UserConnectedMessage;
-
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
@@ -34,6 +34,19 @@ public class LiveMessageFactory {
         messageReceivedMessage.setDate(LocalDateTime.now(ZoneOffset.UTC));
 
         liveMessage.setContent(messageReceivedMessage);
+
+        return liveMessage;
+    }
+
+    public static LiveMessage createGroupCreatedMessage(String groupId) {
+        var liveMessage = new LiveMessage();
+        liveMessage.setType(ContentType.GROUP_CREATED);
+
+        var groupCreatedMessage = new GroupCreatedMessage();
+        groupCreatedMessage.setGroupId(groupId);
+        groupCreatedMessage.setDate(LocalDateTime.now(ZoneOffset.UTC));
+
+        liveMessage.setContent(groupCreatedMessage);
 
         return liveMessage;
     }

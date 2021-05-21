@@ -91,12 +91,12 @@
       }
     });
 
-    PubSub.subscribe(NiiuLive.Messages.CONNECTION_ESTABLISHED, (topic, msg) => {
+    PubSub.subscribe(NiiuEvents.CONNECTION_ESTABLISHED, (topic, msg) => {
       console.log(`topic: ${topic} / message: ${JSON.stringify(msg)}`);
       data.wsConnected = true;
     });
 
-    PubSub.subscribe(NiiuLive.Messages.USER_CONNECTED, (topic, msg) => {
+    PubSub.subscribe(NiiuEvents.USER_CONNECTED, (topic, msg) => {
       console.log(`topic: ${topic} / message: ${JSON.stringify(msg)}`);
     });
 

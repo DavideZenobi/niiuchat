@@ -7,6 +7,8 @@ import io.dz.niiuchat.messaging.dto.CreateGroupOutput;
 import io.dz.niiuchat.messaging.dto.CreateMessageInput;
 import io.dz.niiuchat.messaging.dto.GetMessagesInput;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
+import java.util.ArrayList;
+import java.util.Collections;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +40,10 @@ public class ChatApi {
           Principal principal,
           @RequestBody @Valid CreateGroupInput createGroupInput
   ) {
-    createGroupInput.getUserIds().add(NiiuUser.from(principal).getUser().getId());
-    var createGroupOutput = messagingService.createGroup(createGroupInput.getUserIds());
+    var niiuUserId = NiiuUser.from(principal).getUser().getId();
+
+    createGroupInput.getUserIds().add(niiuUserId);
+    var createGroupOutput = messagingService.createGroup(new ArrayList<>(createGroupInput.getUserIds()), niiuUserId);
 
     return ResponseEntity.ok(createGroupOutput);
   }

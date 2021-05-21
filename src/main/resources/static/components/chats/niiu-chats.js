@@ -45,10 +45,18 @@
       };
     },
     mounted: async function () {
-      const response = await ChatsApi.getChatsByUserId();
-      this.chats = response.data;
+      this.loadChats();
+
+      // Reload chat when a new group is created
+      PubSub.subscribe(NiiuEvents.GROUP_CREATED, (topic, msg) => {
+        this.loadChats();
+      });
     },
     methods: {
+      loadChats: async function () {
+        const response = await ChatsApi.getChatsByUserId();
+        this.chats = response.data;
+      },
       getUserAvatar: function (userId) {
         return `/api/users/${userId}/avatar`;
       },
