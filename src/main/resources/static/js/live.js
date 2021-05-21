@@ -30,9 +30,11 @@
             const message = JSON.parse(event.data);
 
             if (message.type === Messages.USER_CONNECTED) {
-                PubSub.publish(NiiuEvents.USER_CONNECTED, message);
+                PubSub.publish(NiiuEvents.USER_CONNECTED, message.content);
             } else if (message.type === Messages.GROUP_CREATED) {
                 PubSub.publish(NiiuEvents.GROUP_CREATED, message.content.groupId);
+            }  else if (message.type === Messages.MESSAGE_RECEIVED) {
+                PubSub.publish(NiiuEvents.MESSAGE_RECEIVED, message.content);
             } else {
                 console.log(`Unhandled message ${event.data}`);
             }

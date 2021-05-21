@@ -2,8 +2,8 @@ package io.dz.niiuchat.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.dz.niiuchat.authentication.NiiuUser;
-import io.dz.niiuchat.websocket.dto.LiveMessage;
 import io.dz.niiuchat.websocket.dto.LiveMessageFactory;
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,6 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-
-import java.io.IOException;
 
 @Service
 public class LiveSocketHandler extends TextWebSocketHandler {
@@ -69,13 +67,11 @@ public class LiveSocketHandler extends TextWebSocketHandler {
         var principal = session.getPrincipal();
 
         if (principal == null) {
-            session.close();
             return;
         }
 
         var niiuUser = NiiuUser.from(principal);
 
-        session.close();
         liveService.removeSession(niiuUser.getUser().getId());
         LOGGER.info("User {} disconnected", niiuUser.getUser().getUsername());
     }

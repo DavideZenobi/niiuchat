@@ -3,7 +3,7 @@
     const template = `
         <div class="main-area-container">
             <md-content class="chat-message-list md-scrollbar">
-                <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; flex-direction: column-reverse;">
                     <div v-for="message in messages" :key="message.id"
                          :style="getParentStyle(message)">
                         <div :style="getItemStyle(message)">
@@ -26,19 +26,28 @@
             }
         },
         mounted: async function () {
-            const responses = await Promise.all([
-                ChatsApi.getMessagesByGroupId({
+            const response = await UserApi.getCurrentUser();
+            this.currentUser = response.data;
+
+            this.reloadMessages();
+
+            // Check messages received
+            PubSub.subscribe(NiiuEvents.MESSAGE_RECEIVED, (topic, msg) => {
+                if (msg.groupId === this.groupId) {
+                    this.reloadMessages();
+                }
+            });
+        },
+        methods: {
+            reloadMessages: async function () {
+                const response = await ChatsApi.getMessagesByGroupId({
                     groupId: this.groupId,
                     limit: 20,
                     offset: 0
-                }),
-                UserApi.getCurrentUser()
-            ]);
+                });
 
-            this.messages = responses[0].data;
-            this.currentUser = responses[1].data;
-        },
-        methods: {
+                this.messages = response.data;
+            },
             getParentStyle: function (message) {
                 return {
                     display: 'flex',
