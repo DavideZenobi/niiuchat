@@ -14,6 +14,7 @@
                     @logout-clicked="() => window.location = '/logout'"></niiu-toolbar>
 
       <niiu-chats class="niiu-chats md-scrollbar"
+                  :selected-group="currentGroupId"
                   @create-clicked="() => changeState('createChat')"
                   @chat-selected="(groupId) => onChatSelected(groupId)"></niiu-chats>
     </md-app-drawer>
@@ -42,11 +43,17 @@
       },
       profile: {
         id: 'profile',
-        title: 'Profile'
+        title: 'Profile',
+        init: function (data) {
+          data.currentGroupId = null;
+        }
       },
       createChat: {
         id: 'createChat',
-        title: 'Create Chat'
+        title: 'Create Chat',
+        init: function (data) {
+          data.currentGroupId = null;
+        }
       }
     };
 
@@ -71,6 +78,11 @@
       methods: {
         changeState: function(newState) {
           data.state = states[newState];
+
+          // Call .init(...) function if present in the state
+          if (typeof data.state.init === 'function') {
+            data.state.init(data);
+          }
         },
         onChatSelected: function(groupId) {
           data.currentGroupId = groupId;
@@ -79,12 +91,12 @@
       }
     });
 
-    PubSub.subscribe(NiiuLive.Messages.CONNECTION_ESTABLISHED, (topic, msg) => {
+    PubSub.subscribe(NiiuEvents.CONNECTION_ESTABLISHED, (topic, msg) => {
       console.log(`topic: ${topic} / message: ${JSON.stringify(msg)}`);
       data.wsConnected = true;
     });
 
-    PubSub.subscribe(NiiuLive.Messages.USER_CONNECTED, (topic, msg) => {
+    PubSub.subscribe(NiiuEvents.USER_CONNECTED, (topic, msg) => {
       console.log(`topic: ${topic} / message: ${JSON.stringify(msg)}`);
     });
 

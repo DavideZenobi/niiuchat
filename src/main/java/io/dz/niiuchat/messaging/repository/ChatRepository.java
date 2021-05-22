@@ -2,11 +2,11 @@ package io.dz.niiuchat.messaging.repository;
 
 import static io.dz.niiuchat.domain.tables.Chats.CHATS;
 import static io.dz.niiuchat.domain.tables.Users.USERS;
+import static org.jooq.impl.DSL.count;
 
 import io.dz.niiuchat.domain.tables.pojos.Chats;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
 import java.util.List;
-import java.util.Optional;
 import org.jooq.Configuration;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
@@ -75,4 +75,44 @@ public class ChatRepository {
         chats.getUpdateDate()
     ).execute();
   }
+
+  public List<Long> getUserIdsByGroupId(String groupId) {
+    return dslContext.select(CHATS.USER_ID)
+        .from(CHATS)
+        .where(CHATS.GROUP_ID.eq(groupId))
+        .fetchInto(Long.class);
+  }
+
+  public boolean chatAlreadyExist(Configuration configuration, Long userId1, Long userId2) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    io.dz.niiuchat.domain.tables.Chats c1 = CHATS.as("c1");
+    io.dz.niiuchat.domain.tables.Chats c2 = CHATS.as("c2");
+
+    Integer count = currentContext.selectCount()
+        .from(c1)
+        .innerJoin(c2).on(c2.USER_ID.eq(userId2))
+        .where(c1.USER_ID.eq(userId1))
+        .and(c1.GROUP_ID.eq(c2.GROUP_ID))
+        .fetchOne(0, int.class);
+
+    return count != null && count >= 1;
+  }
+
+  public void deleteChat(String groupId) {
+    deleteChat(null, groupId);
+  }
+
+  public void deleteChat(Configuration configuration, String groupId) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    currentContext.delete(CHATS)
+        .where(CHATS.GROUP_ID.eq(groupId))
+        .execute();
+  }
+
 }
