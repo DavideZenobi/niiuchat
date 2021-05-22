@@ -1,6 +1,7 @@
 package io.dz.niiuchat.websocket.dto;
 
 import io.dz.niiuchat.websocket.dto.content.GroupCreatedMessage;
+import io.dz.niiuchat.websocket.dto.content.GroupDeletedMessage;
 import io.dz.niiuchat.websocket.dto.content.MessageReceivedMessage;
 import io.dz.niiuchat.websocket.dto.content.UserConnectedMessage;
 import java.time.LocalDateTime;
@@ -47,6 +48,19 @@ public class LiveMessageFactory {
         groupCreatedMessage.setDate(LocalDateTime.now(ZoneOffset.UTC));
 
         liveMessage.setContent(groupCreatedMessage);
+
+        return liveMessage;
+    }
+
+    public static LiveMessage createGroupDeletedMessage(String groupId) {
+        var liveMessage = new LiveMessage();
+        liveMessage.setType(ContentType.GROUP_DELETED);
+
+        var groupDeletedMessage = new GroupDeletedMessage();
+        groupDeletedMessage.setGroupId(groupId);
+        groupDeletedMessage.setDate(LocalDateTime.now(ZoneOffset.UTC));
+
+        liveMessage.setContent(groupDeletedMessage);
 
         return liveMessage;
     }

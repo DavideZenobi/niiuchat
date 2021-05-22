@@ -58,4 +58,18 @@ public class MessageRepository {
     ).execute();
   }
 
+  public void deleteMessagesByGroupId(String groupId) {
+    deleteMessagesByGroupId(null, groupId);
+  }
+
+  public void deleteMessagesByGroupId(Configuration configuration, String groupId) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    currentContext.delete(MESSAGES)
+        .where(MESSAGES.GROUP_ID.eq(groupId))
+        .execute();
+  }
+
 }

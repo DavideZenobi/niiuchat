@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,6 +71,14 @@ public class ChatApi {
     var niiuUser = NiiuUser.from(principal).getUser();
 
     return messagingService.getMessagesByGroupId(niiuUser.getId(), groupId, input.toPageInfo());
+  }
+
+  @DeleteMapping(path = "/chats/{groupId}/")
+  public void deleteChat(
+      Principal principal,
+      @PathVariable String groupId
+  ) {
+    messagingService.deleteChat(NiiuUser.from(principal).getUser().getId(), groupId);
   }
 
 }

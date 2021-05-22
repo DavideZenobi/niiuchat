@@ -101,4 +101,18 @@ public class ChatRepository {
     return count != null && count >= 1;
   }
 
+  public void deleteChat(String groupId) {
+    deleteChat(null, groupId);
+  }
+
+  public void deleteChat(Configuration configuration, String groupId) {
+    DSLContext currentContext = (configuration != null) ?
+        DSL.using(configuration) :
+        dslContext;
+
+    currentContext.delete(CHATS)
+        .where(CHATS.GROUP_ID.eq(groupId))
+        .execute();
+  }
+
 }

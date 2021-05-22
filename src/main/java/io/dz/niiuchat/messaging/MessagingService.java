@@ -113,4 +113,20 @@ public class MessagingService {
     return messageRepository.findAllByGroupId(groupId, pageInfo);
   }
 
+  public void deleteChat(Long userId, String groupId) {
+    Set<Long> userIdsInGroup = messagingCachedService.getUserIdsForGroup(groupId);
+
+    if (!userIdsInGroup.contains(userId)) {
+      throw new RuntimeException("User " + userId + " does not belongs to selected group " + groupId);
+    }
+
+    dslContext.transaction(configuration -> {
+      messageRepository.deleteMessagesByGroupId(configuration, groupId);
+      chatRepository.deleteChat(configuration, groupId);
+    });
+
+    var liveMessage = LiveMessageFactory.createGroupDeletedMessage(groupId);
+    liveService.sendMessage(userIdsInGroup, liveMessage);
+  }
+
 }

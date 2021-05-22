@@ -18,6 +18,10 @@
       return axios.post('/api/messaging/message', data);
     }
 
+    deleteChat(groupId) {
+      return axios.delete(`/api/messaging/chats/${groupId}/`);
+    }
+
   }
 
   window.ChatsApi = new ChatsApi();
