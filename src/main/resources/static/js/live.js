@@ -24,7 +24,11 @@
         }
 
         onClose(event) {
-            PubSub.publish(NiiuEvents.CONNECTION_CLOSED, true)
+            PubSub.publish(NiiuEvents.CONNECTION_CLOSED, true);
+
+            setTimeout(() => {
+                window.NiiuLive.connect();
+            }, 1000);
         }
 
         onMessage(event) {

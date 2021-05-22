@@ -92,8 +92,11 @@
     });
 
     PubSub.subscribe(NiiuEvents.CONNECTION_ESTABLISHED, (topic, msg) => {
-      console.log(`topic: ${topic} / message: ${JSON.stringify(msg)}`);
       data.wsConnected = true;
+    });
+
+    PubSub.subscribe(NiiuEvents.CONNECTION_CLOSED, (topic, msg) => {
+      data.wsConnected = false;
     });
 
     PubSub.subscribe(NiiuEvents.USER_CONNECTED, (topic, msg) => {

@@ -5,7 +5,7 @@ import io.dz.niiuchat.authentication.UserRole;
 import io.dz.niiuchat.common.ImageService;
 import io.dz.niiuchat.domain.tables.pojos.Files;
 import io.dz.niiuchat.domain.tables.pojos.Users;
-import io.dz.niiuchat.storage.dto.ImagePaths;
+import io.dz.niiuchat.storage.dto.FilePaths;
 import io.dz.niiuchat.storage.repository.FileRepository;
 import io.dz.niiuchat.storage.service.FileService;
 import io.dz.niiuchat.storage.service.StorageService;
@@ -92,7 +92,7 @@ class UserServiceTest {
     lenient().when(imageService.getMediaType(any(InputStream.class))).thenReturn(MediaType.image("png"));
     lenient().when(imageService.isAcceptedImage(any(MediaType.class))).thenReturn(true);
     lenient().when(imageService.resizeAvatar(any(BufferedImage.class))).thenReturn(new BufferedImage(1, 1, TYPE_INT_RGB));
-    lenient().when(storageService.getAvatarPaths(anyString(), anyLong())).thenReturn(new ImagePaths("mock/path", "/absolute/mock/path"));
+    lenient().when(storageService.getAvatarPaths(anyString(), anyLong())).thenReturn(new FilePaths("mock/path", "/absolute/mock/path"));
     lenient().when(fileService.createAvatar(anyLong(), anyString(), anyString())).thenReturn(dummyAvatar);
     lenient().when(fileRepository.findOne(any(Configuration.class), anyString())).thenReturn(Optional.empty());
 
@@ -166,7 +166,7 @@ class UserServiceTest {
     verify(fileService).createAvatar(anyLong(), anyString(), anyString());
     verify(fileRepository).save(any(Configuration.class), any(Files.class));
     verify(userRepository).updateUserAvatar(any(Configuration.class), anyLong(), anyString(), any(LocalDateTime.class));
-    verify(storageService).saveAvatar(any(BufferedImage.class), anyString(), any(ImagePaths.class));
+    verify(storageService).saveAvatar(any(BufferedImage.class), anyString(), any(FilePaths.class));
 
     imageStream.close();
   }

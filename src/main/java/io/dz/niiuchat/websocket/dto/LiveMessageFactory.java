@@ -24,7 +24,7 @@ public class LiveMessageFactory {
         return liveMessage;
     }
 
-    public static LiveMessage createMessageReceivedMessage(Long userId, String groupId, String message) {
+    public static LiveMessage createMessageReceivedMessage(Long userId, String groupId, String message, Boolean hasAttachment) {
         var liveMessage = new LiveMessage();
         liveMessage.setType(ContentType.MESSAGE_RECEIVED);
 
@@ -32,6 +32,7 @@ public class LiveMessageFactory {
         messageReceivedMessage.setUserId(userId);
         messageReceivedMessage.setGroupId(groupId);
         messageReceivedMessage.setMessage(message);
+        messageReceivedMessage.setHasAttachment(hasAttachment);
         messageReceivedMessage.setDate(LocalDateTime.now(ZoneOffset.UTC));
 
         liveMessage.setContent(messageReceivedMessage);

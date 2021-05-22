@@ -27,4 +27,16 @@ public class FileService {
     return avatarFile;
   }
 
+  public Files createAttachment(Long userId, String groupId, String mediaType, String path) {
+    Files avatarFile = new Files();
+    avatarFile.setId(storageService.getAttachmentId(userId, groupId));
+    avatarFile.setName("User chat attachment");
+    avatarFile.setMediaType(mediaType);
+    avatarFile.setType(FileType.ATTACHMENT.toString());
+    avatarFile.setPath(path);
+    avatarFile.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
+
+    return avatarFile;
+  }
+
 }
