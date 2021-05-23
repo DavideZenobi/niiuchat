@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.jooq.DSLContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,8 +102,13 @@ public class MessagingService {
     return CreateGroupOutput.builder().groupId(chats.getGroupId()).build();
   }
 
-  public Messages insertMessage(Long userId, CreateMessageInput createMessageInput) {
+  public MessageDto insertMessage(Long userId, CreateMessageInput createMessageInput) {
+    if (Boolean.FALSE.equals(createMessageInput.hasAttachment()) && StringUtils.isBlank(createMessageInput.getMessage())) {
+      throw new RuntimeException("Message cannot be empty if don't have attachment");
+    }
+
     var now = Instant.now();
+    var attachment = new Object() { Attachments value; };
 
     var message = new Messages();
     message.setId(UUID.randomUUID().toString());
@@ -136,14 +142,14 @@ public class MessagingService {
 
           fileRepository.save(configuration, file);
 
-          var attachment = new Attachments();
-          attachment.setId(UUID.randomUUID().toString());
-          attachment.setMessageId(message.getId());
-          attachment.setType(attachmentMediaType.getSubtype());
-          attachment.setFileId(file.getId());
-          attachment.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
+          attachment.value = new Attachments();
+          attachment.value.setId(UUID.randomUUID().toString());
+          attachment.value.setMessageId(message.getId());
+          attachment.value.setType(attachmentMediaType.getSubtype());
+          attachment.value.setFileId(file.getId());
+          attachment.value.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
 
-          attachmentRepository.create(configuration, attachment);
+          attachmentRepository.create(configuration, attachment.value);
 
           storageService.saveAttachment(fileStream.readAllBytes(), attachmentsPaths);
         } catch (IOException e) {
@@ -167,7 +173,7 @@ public class MessagingService {
 
     liveService.sendMessage(userIdsSet, liveMessage);
 
-    return message;
+    return new MessageDto(message, attachment.value);
   }
 
   public List<MessageDto> getMessagesByGroupId(Long userId, String groupId, PageInfo pageInfo) {

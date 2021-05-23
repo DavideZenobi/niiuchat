@@ -50,7 +50,7 @@ public class MessagingApi {
   }
 
   @PostMapping(path = "/messages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-  public Messages insertMessage(
+  public MessageDto insertMessage(
       Principal principal,
       @ModelAttribute CreateMessageInput createMessageInput
   ) {

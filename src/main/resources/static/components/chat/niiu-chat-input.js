@@ -33,7 +33,7 @@
           <md-dialog-actions>
             <md-button class="md-icon-button" 
                        @click="sendAttachment"
-                       :disabled="!isTypingFile">Send</md-button>
+                       :disabled="!this.dialog.file">Send</md-button>
             <md-button class="md-icon-button" @click="onCloseDialog">Close</md-button>
           </md-dialog-actions>
         </form>
@@ -66,7 +66,7 @@
       return {
         dialog: {
           message: '',
-          file: '',
+          file: null,
           fileName: ''
         },
         message: '',
@@ -94,7 +94,7 @@
         this.message = '';
       },
       sendAttachment: async function () {
-        if (!this.dialog.message || !this.dialog.file) {
+        if (!this.dialog.file) {
           return;
         }
 

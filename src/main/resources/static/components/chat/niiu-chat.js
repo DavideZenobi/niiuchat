@@ -4,17 +4,15 @@
         <div class="main-area-container">
           <md-content class="chat-message-list md-scrollbar">
               <div style="display: flex; flex-direction: column-reverse;">
-                  <div v-for="message in messages" :key="message.id"
-                       :style="getParentStyle(message)">
-                      <div :style="getItemStyle(message)">
-                          <span>{{message.message}}</span>
-                      </div>
+                  <div v-for="messageData in messages" :key="messageData.message.id"
+                       :style="getParentStyle(messageData.message)">
+                      <niiu-chat-message :message-data="messageData"></niiu-chat-message>
                   </div>
               </div>
           </md-content>
           
           <div style="padding: 1rem;">
-            <niiu-chat-input :group-id="groupId" @on-send-message="(message) => messages.push(message)"></niiu-chat-input>
+            <niiu-chat-input :group-id="groupId" @on-send-message="(message) => messages.unshift(message)"></niiu-chat-input>
           </div>
         </div>
     `;
@@ -55,15 +53,6 @@
                 return {
                     display: 'flex',
                     'flex-direction': message.userId === this.currentUser.id ? 'row-reverse' : 'row'
-                };
-            },
-            getItemStyle: function (message) {
-                return {
-                    border: 'solid 1px #000000',
-                    'border-radius': '4px',
-                    padding: '.75rem',
-                    margin: '.5rem',
-                    width: 'fit-content'
                 };
             }
         }
