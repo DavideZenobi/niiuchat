@@ -80,21 +80,10 @@
         formData.append('message', this.message);
 
         const response = await ChatsApi.sendMessage(formData);
+
         this.$emit('on-send-message', response.data);
+
         this.message = '';
-      },
-      onCloseDialog: function() {
-        this.dialog.message = '';
-        this.dialog.file = null;
-
-        this.showDialog = false;
-      },
-      onFileSelected: function(event) {
-        const files = event.target.files;
-
-        if (files.length >= 1) {
-          this.dialog.file = files[0];
-        }
       },
       sendAttachment: async function () {
         if (!this.dialog.message || !this.dialog.file) {
@@ -110,11 +99,26 @@
         }
 
         const response = await ChatsApi.sendMessage(formData);
+
         this.$emit('on-send-message', response.data);
+
         this.dialog.message = '';
         this.dialog.file = null;
 
         this.showDialog = false;
+      },
+      onCloseDialog: function() {
+        this.dialog.message = '';
+        this.dialog.file = null;
+
+        this.showDialog = false;
+      },
+      onFileSelected: function(event) {
+        const files = event.target.files;
+
+        if (files.length >= 1) {
+          this.dialog.file = files[0];
+        }
       }
     }
   });
