@@ -117,9 +117,20 @@ public class MessagingService {
       if (Boolean.TRUE.equals(createMessageInput.hasAttachment())) {
         try (InputStream fileStream = new BufferedInputStream(createMessageInput.getAttachment().getInputStream(), (int) createMessageInput.getAttachment().getSize())) {
           var attachmentMediaType = storageService.getMediaType(fileStream);
-          var attachmentId = storageService.getAttachmentId(userId, createMessageInput.getGroupId());
-          var attachmentsPaths = storageService.getAttachmentPaths(attachmentMediaType.getSubtype(), attachmentId);
-          var file = fileService.createAttachment(userId, createMessageInput.getGroupId(), attachmentMediaType.toString(), attachmentsPaths.getRelativePath());
+
+          var attachmentId = storageService.getAttachmentId(
+              userId,
+              createMessageInput.getGroupId());
+
+          var attachmentsPaths = storageService.getAttachmentPaths(
+              attachmentMediaType.getSubtype(),
+              attachmentId);
+
+          var file = fileService.createAttachment(
+              attachmentId,
+              createMessageInput.getAttachment().getOriginalFilename(),
+              attachmentMediaType.toString(),
+              attachmentsPaths.getRelativePath());
 
           fileRepository.save(configuration, file);
 
