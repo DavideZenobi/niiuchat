@@ -2,17 +2,20 @@
 
     const template = `
         <div class="main-area-container">
-            <md-content class="chat-message-list md-scrollbar">
-                <div style="display: flex; flex-direction: column-reverse;">
-                    <div v-for="message in messages" :key="message.id"
-                         :style="getParentStyle(message)">
-                        <div :style="getItemStyle(message)">
-                            <span>{{message.message}}</span>
-                        </div>
-                    </div>
-                </div>
-            </md-content>
-          <niiu-chat-input :group-id="groupId" @on-send-message="(message) => messages.push(message)"></niiu-chat-input>
+          <md-content class="chat-message-list md-scrollbar">
+              <div style="display: flex; flex-direction: column-reverse;">
+                  <div v-for="message in messages" :key="message.id"
+                       :style="getParentStyle(message)">
+                      <div :style="getItemStyle(message)">
+                          <span>{{message.message}}</span>
+                      </div>
+                  </div>
+              </div>
+          </md-content>
+          
+          <div style="padding: 1rem;">
+            <niiu-chat-input :group-id="groupId" @on-send-message="(message) => messages.push(message)"></niiu-chat-input>
+          </div>
         </div>
     `;
 
