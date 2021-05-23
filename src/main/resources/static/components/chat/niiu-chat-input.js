@@ -8,9 +8,16 @@
               style="padding: 1rem;"
               @submit.prevent="sendAttachment">
           <div @click="$refs.attachmentInput.click()"
-               style="cursor: pointer; text-align: center; width: 100%;">
+               style="cursor: pointer; text-align: center; width: 100%;"
+               v-show="!dialog.file">
             <md-icon class="md-size-5x md-primary">upload</md-icon>
           </div>
+          <div @click="$refs.attachmentInput.click()"
+               style="cursor: pointer; text-align: center; width: 100%;"
+               v-show="dialog.file">
+            <md-icon class="md-size-5x" style="color: green;">check_circle</md-icon>
+          </div>
+          <span>{{dialog.fileName}}</span>
           
           <input ref="attachmentInput"
                type="file"
@@ -59,7 +66,8 @@
       return {
         dialog: {
           message: '',
-          file: ''
+          file: '',
+          fileName: ''
         },
         message: '',
         showDialog: false
@@ -102,23 +110,24 @@
 
         this.$emit('on-send-message', response.data);
 
-        this.dialog.message = '';
-        this.dialog.file = null;
-
-        this.showDialog = false;
+        this.clearDialog();
       },
       onCloseDialog: function() {
-        this.dialog.message = '';
-        this.dialog.file = null;
-
-        this.showDialog = false;
+        this.clearDialog();
       },
       onFileSelected: function(event) {
         const files = event.target.files;
 
         if (files.length >= 1) {
           this.dialog.file = files[0];
+          this.dialog.fileName = files[0].name;
         }
+      },
+      clearDialog: function() {
+        this.dialog.message = '';
+        this.dialog.fileName = '';
+        this.dialog.file = null;
+        this.showDialog = false;
       }
     }
   });
