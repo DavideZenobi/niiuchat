@@ -7,6 +7,7 @@ import io.dz.niiuchat.messaging.dto.CreateGroupOutput;
 import io.dz.niiuchat.messaging.dto.CreateMessageInput;
 import io.dz.niiuchat.messaging.dto.GetMessagesInput;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
+import io.dz.niiuchat.messaging.dto.MessageDto;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class MessagingApi {
   }
 
   @GetMapping(path = "/messages/{groupId}/", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<Messages> getMessagesByGroupId(
+  public List<MessageDto> getMessagesByGroupId(
       Principal principal,
       @PathVariable String groupId,
       @Valid GetMessagesInput input

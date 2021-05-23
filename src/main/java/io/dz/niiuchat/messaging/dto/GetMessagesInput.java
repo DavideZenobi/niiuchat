@@ -9,7 +9,7 @@ import javax.validation.constraints.Min;
 @Data
 public class GetMessagesInput {
 
-    @Min(0)
+    @Min(1)
     @Max(20)
     private Integer limit;
 

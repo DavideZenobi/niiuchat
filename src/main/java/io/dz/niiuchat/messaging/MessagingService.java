@@ -7,6 +7,7 @@ import io.dz.niiuchat.domain.tables.pojos.Messages;
 import io.dz.niiuchat.messaging.dto.CreateGroupOutput;
 import io.dz.niiuchat.messaging.dto.CreateMessageInput;
 import io.dz.niiuchat.messaging.dto.GroupOutput;
+import io.dz.niiuchat.messaging.dto.MessageDto;
 import io.dz.niiuchat.messaging.repository.AttachmentRepository;
 import io.dz.niiuchat.messaging.repository.ChatRepository;
 import io.dz.niiuchat.messaging.repository.MessageRepository;
@@ -21,6 +22,7 @@ import java.io.InputStream;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -168,7 +170,7 @@ public class MessagingService {
     return message;
   }
 
-  public List<Messages> getMessagesByGroupId(Long userId, String groupId, PageInfo pageInfo) {
+  public List<MessageDto> getMessagesByGroupId(Long userId, String groupId, PageInfo pageInfo) {
     Set<Long> userIdsInGroup = messagingCachedService.getUserIdsForGroup(groupId);
 
     if (!userIdsInGroup.contains(userId)) {
