@@ -137,7 +137,7 @@ public class MessagingService {
           var attachment = new Attachments();
           attachment.setId(UUID.randomUUID().toString());
           attachment.setMessageId(message.getId());
-          attachment.setType("");
+          attachment.setType(attachmentMediaType.getSubtype());
           attachment.setFileId(file.getId());
           attachment.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
 
