@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sh ./mvnw clean flyway:clean flyway:migrate package
+
+sh ./mvnw spring-boot:run
